@@ -96,6 +96,10 @@ class HypermediaHTTPServer(HTTPServer):
 
 class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
     
+    def __init__(self, requestHandler, *args, **kwargs):
+        self.handleRequest = requestHandler
+        BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
+        
     def handle_one_request(self):
         """Handle a single HTTP request. Create an instance of this class with a "handleRequest" method to process the request
         """
@@ -158,11 +162,7 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             self.payload = self.currentRequest[v.response][v.payload]
             self.wfile.write("%s", self.payload)
         return
-    
-    def handleRequest(self, currentRequest):
-        pass
-    
-    
+        
 def test(HandlerClass = HypermediaHTTPRequestHandler,
          ServerClass = HypermediaHTTPServer, protocol="HTTP/1.0"):
     """Test the HypermediaHTTP request handler class.
