@@ -96,8 +96,8 @@ class HypermediaHTTPServer(HTTPServer):
 
 class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
     
-    def __init__(self, requestHandler, *args, **kwargs):
-        self.handleRequest = requestHandler
+    def __init__(self, appRequestHandler, *args, **kwargs):
+        self.handleRequest = appRequestHandler
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
         
     def handle_one_request(self):
@@ -146,8 +146,10 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.currentRequest[v.payload] = self.payload
         """set up response map"""
         self.currentRequest[v.response] = {v.status:v.ServerError}
+        
         """call hypermedia application handler"""
         self.handleRequest(self.currentRequest)
+        
         """process response and headers"""
         self.send_response( v.toCode[ self.currentRequest[v.response][v.status] ] )
         self.contentLength = 0
@@ -162,7 +164,16 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             self.payload = self.currentRequest[v.response][v.payload]
             self.wfile.write("%s", self.payload)
         return
-        
+    
+class DefaultAppHandler :
+    def processRequest(self, currentRequest):
+        self.currentRequest = currentRequest
+        self.currentRequest[v.response][v.status] = v.NotFound
+        print "\r\nRequest:\r\n"
+        print self.currentRequest
+        print "\r\n"
+        return
+    
 def test(HandlerClass = HypermediaHTTPRequestHandler,
          ServerClass = HypermediaHTTPServer, protocol="HTTP/1.0"):
     """Test the HypermediaHTTP request handler class.
@@ -171,7 +182,10 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
     argument).
 
     """
-
+    from functools import partial
+    
+    appHandler = DefaultAppHandler()
+    
     if sys.argv[1:]:
         port = int(sys.argv[1])
     else:
@@ -179,7 +193,7 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
     server_address = ('', port)
 
     HandlerClass.protocol_version = protocol
-    httpd = ServerClass(server_address, HandlerClass)
+    httpd = ServerClass( server_address, partial(HandlerClass, appHandler.processRequest) )
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
