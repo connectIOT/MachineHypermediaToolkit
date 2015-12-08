@@ -83,7 +83,6 @@ Client fills request form and sends to server using selected protocol
 Server processes request and fills in response and transmits back to client
 Client processes the response and updates application state
 
-
 """
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -101,7 +100,7 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
         
     def handle_one_request(self):
-        """Handle a single HTTP request. Create an instance of this class with a "handleRequest" method to process the request
+        """Handle a single HTTP request. Invokes self.handleRequest with the currentRequest object.
         """
         try:
             self.raw_requestline = self.rfile.readline(65537)
@@ -165,7 +164,7 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write("%s", self.payload)
         return
     
-class DefaultAppHandler :
+class TestAppHandler :
     def processRequest(self, currentRequest):
         self.currentRequest = currentRequest
         self.currentRequest[v.response][v.status] = v.NotFound
@@ -183,9 +182,7 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
 
     """
     from functools import partial
-    
-    appHandler = DefaultAppHandler()
-    
+        
     if sys.argv[1:]:
         port = int(sys.argv[1])
     else:
@@ -193,7 +190,7 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
     server_address = ('', port)
 
     HandlerClass.protocol_version = protocol
-    httpd = ServerClass( server_address, partial(HandlerClass, appHandler.processRequest) )
+    httpd = ServerClass( server_address, partial(HandlerClass, TestAppHandler().processRequest) )
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
