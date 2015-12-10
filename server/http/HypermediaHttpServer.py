@@ -128,12 +128,16 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         """fill out currentRequest map and call handleRequest()"""
         self.currentRequest = {}
         self.currentRequest[v.uri] = self.path
-        self.currentRequest[v.options] = self.headers
+        self.currentRequest[v.options] = {}
+        for option in self.headers :
+            self.currentRequest[v.options][option] = self.headers[option]
+        
         if "Accept" in self.headers: 
             self.currentRequest[v.contentFormat] = self.headers['Accept']
         elif "Content-Type" in self.headers:
             self.currentRequest[v.contentFormat] = self.headers['Content-Type']
         self.currentRequest[v.method] = self.command
+        
         """check payload length and copy if there is a nonzero payload"""
         self.contentLength = 0
         if "Content-Length" in self.headers:
@@ -143,6 +147,7 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             if (self.contentLength > 0): 
                 self.payload = self.rfile.read(self.contentLength)
                 self.currentRequest[v.payload] = self.payload
+                
         """set up response map"""
         self.currentRequest[v.response] = {v.status:v.ServerError}
         
@@ -158,6 +163,7 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(self.contentLength))
             self.send_header("Content-Type", self.currentRequest[v.response][v.contentFormat])
         self.end_headers()
+        
         """if there is a payload, send it"""
         if self.contentLength > 0:
             self.payload = self.currentRequest[v.response][v.payload]
