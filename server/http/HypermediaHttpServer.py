@@ -128,9 +128,11 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         """fill out currentRequest map and call handleRequest()"""
         self.currentRequest = {}
         self.currentRequest[v.uri] = self.path
-        self.currentRequest[v.options] = {}
+        
+        """self.currentRequest[v.options] = {}
         for option in self.headers :
             self.currentRequest[v.options][option] = self.headers[option]
+        """
         
         if self.command == v.get and "Accept" in self.headers: 
             self.currentRequest[v.contentFormat] = self.headers['Accept']
