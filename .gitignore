@@ -58,3 +58,6 @@ target/
 
 #IDE
 .idea
+
+#Eclipse
+.project
