@@ -132,7 +132,8 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         for option in self.headers :
             self.currentRequest[v.options][option] = self.headers[option]
         
-        if "Accept" in self.headers: 
+        if self.command == v.get and "Accept" in self.headers: 
+            self.currentRequest[v.accept] = self.headers['Accept']
             self.currentRequest[v.contentFormat] = self.headers['Accept']
         elif "Content-Type" in self.headers:
             self.currentRequest[v.contentFormat] = self.headers['Content-Type']
