@@ -8,6 +8,8 @@ patch = "PATCH"
 
 """terms for request mapping"""
 uri = "uri"
+uriPath = "uriPath"
+uriQuery = "uriQuery"
 params = "params"
 method = "method"
 accept = "accept"

@@ -127,7 +127,19 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
     def mapRequest(self):
         """fill out currentRequest map and call handleRequest()"""
         self.currentRequest = {}
-        self.currentRequest[v.uri] = self.path
+
+        self.currentRequest[v.uriPath] = ["/"]
+        for self.pathElement in self.path.split("?")[0].split("/"):
+            if len(self.pathElement) >0:
+                    self.currentRequest[v.uriPath].append(self.pathElement)
+            
+        self.currentRequest[v.uriQuery] = {}
+        for self.queryElement in self.path.split("?")[1].split("&"):
+            if self.queryElement.find("=") >0:
+                (self.k, self.v) = self.queryElement.split("=")
+                self.currentRequest[v.uriQuery][self.k] = self.v
+            else: 
+                self.currentRequest[v.uriQuery][self.queryElement] = ""
         
         """self.currentRequest[v.options] = {}
         for option in self.headers :
