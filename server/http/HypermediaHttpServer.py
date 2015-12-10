@@ -133,7 +133,6 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
             self.currentRequest[v.options][option] = self.headers[option]
         
         if self.command == v.get and "Accept" in self.headers: 
-            self.currentRequest[v.accept] = self.headers['Accept']
             self.currentRequest[v.contentFormat] = self.headers['Accept']
         elif "Content-Type" in self.headers:
             self.currentRequest[v.contentFormat] = self.headers['Content-Type']
@@ -142,7 +141,6 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         """check payload length and copy if there is a nonzero payload"""
         self.contentLength = 0
         if "Content-Length" in self.headers:
-            """self.contentLength = int(self.headers.getheader('Content-Length'))"""
             self.contentLength = int(self.headers['Content-Length'])
             self.currentRequest[v.contentLength] = self.contentLength
             if (self.contentLength > 0): 
