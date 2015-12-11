@@ -37,6 +37,7 @@ PrecondFailed = "PrecondFailed"
 UnsupportedType = "UnsupportedType"
 ServerError = "ServerError"
 
+"""Mapping of abstract status to http codes"""
 toCode = {
           Success: 200,
           Created: 201,
@@ -51,4 +52,27 @@ toCode = {
           UnsupportedType: 415,
           ServerError: 500
           }
+
+"""terms in link-format representations"""
+_href = "href",
+_anchor = "anchor",
+_rel = "rel",
+_self = "self",
+_sub = "sub",
+_rt = "rt",
+_ct = "ct",
+_if = "if",
+_sz = "sz",
+
+"""terms in senml and extensions"""
+_e = "e", #entities
+_l = "l", #links
+_bn = "bn", #base name (base uri)
+_n = "n", #name (uri)
+_u = "u", #units
+_v = "v", #numeric value
+_bv = "bv", #boolean value
+_sv = "sv", #string value
+_ov = "ov", #object value
+
 

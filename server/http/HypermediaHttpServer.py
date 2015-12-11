@@ -11,7 +11,6 @@ containing request and response elements used in processing the hypermedia.
 
 REQUEST
 URI
-(query) parameters
 content-format
 method
 payload
