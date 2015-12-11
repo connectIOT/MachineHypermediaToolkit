@@ -21,6 +21,7 @@ response = "response"
 status = "status"
 code = "code"
 reason = "reason"
+location = "location"
 
 """terms used in response status abstraction"""
 Success = "Success"       

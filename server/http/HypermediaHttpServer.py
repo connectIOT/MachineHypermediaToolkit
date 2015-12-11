@@ -65,9 +65,10 @@ ServerError       500              5.00
 JSON keys to the request-response interface are described in the example below.
 
 {
-    "uri": "/", 
+    "uriPath": ["/","a", "b"], 
+    "uriQuery": {"rt": "test", "obs": "", "if": "core.b"}
     "contentFormat": "application/link-format+json",
-    "options": null
+    "options": {}
     "method": "GET",
     "payload": null,
     "response": {
@@ -75,7 +76,7 @@ JSON keys to the request-response interface are described in the example below.
         "code": "204",
         "reason": "No Content",
         "contentFormat": "application/link-format+json",
-        "payload": "[{"href":null,"rel":"self","rt":"index"}]"
+        "payload": "[{"href":"","rel":"self","rt":"index"}]"
         }
 }
     
@@ -84,6 +85,7 @@ Server processes request and fills in response and transmits back to client
 Client processes the response and updates application state
 
 """
+__version__ = "0.1"
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import socket, sys
@@ -95,12 +97,16 @@ class HypermediaHTTPServer(HTTPServer):
 
 class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
     
+    server_version = "HttpHyperServer/" + __version__
+
     def __init__(self, appRequestHandler, *args, **kwargs):
         self.handleRequest = appRequestHandler
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
         
     def handle_one_request(self):
-        """Handle a single HTTP request. Invokes self.handleRequest with the currentRequest object.
+        """
+        Handle a single HTTP request. 
+        Invokes self.handleRequest with the currentRequest object.
         """
         try:
             self.raw_requestline = self.rfile.readline(65537)
@@ -134,12 +140,13 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
                     self.currentRequest[v.uriPath].append(self.pathElement)
             
         self.currentRequest[v.uriQuery] = {}
-        for self.queryElement in self.path.split("?")[1].split("&"):
-            if self.queryElement.find("=") >0:
-                (self.k, self.v) = self.queryElement.split("=")
-                self.currentRequest[v.uriQuery][self.k] = self.v
-            else: 
-                self.currentRequest[v.uriQuery][self.queryElement] = ""
+        if self.path.find("/") >0:
+            for self.queryElement in self.path.split("?")[1].split("&"):
+                if self.queryElement.find("=") >0:
+                    (self.k, self.v) = self.queryElement.split("=")
+                    self.currentRequest[v.uriQuery][self.k] = self.v
+                else: 
+                    self.currentRequest[v.uriQuery][self.queryElement] = ""
         
         """self.currentRequest[v.options] = {}
         for option in self.headers :
@@ -168,25 +175,33 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         self.handleRequest(self.currentRequest)
         
         """process response and headers"""
-        self.send_response( v.toCode[ self.currentRequest[v.response][v.status] ] )
+        self.send_response(v.toCode[self.currentRequest[v.response][v.status]])
+        
         self.contentLength = 0
         if v.payload in self.currentRequest[v.response]:
-            self.contentLength = self.currentRequest[v.response][v.payload].len()
+            self.contentLength = len(self.currentRequest[v.response][v.payload])
             self.payload = self.currentRequest[v.response][v.payload]
             self.send_header("Content-Length", str(self.contentLength))
-            self.send_header("Content-Type", self.currentRequest[v.response][v.contentFormat])
+            self.send_header("Content-Type", \
+                             self.currentRequest[v.response][v.contentFormat])
+        if v.location in self.currentRequest[v.response]:
+            self.send_header("Location", \
+                self.currentRequest[v.response][v.location])
         self.end_headers()
         
         """if there is a payload, send it"""
         if self.contentLength > 0:
-            self.payload = self.currentRequest[v.response][v.payload]
-            self.wfile.write("%s", self.payload)
+            self.wfile.write(self.payload)
         return
     
 class TestAppHandler :
     def processRequest(self, currentRequest):
         self.currentRequest = currentRequest
-        self.currentRequest[v.response][v.status] = v.NotFound
+        self.currentRequest[v.response][v.status] = v.Success
+        self.currentRequest[v.response][v.payload] = "1234"
+        self.currentRequest[v.response][v.contentFormat] = "application/json"
+        self.currentRequest[v.response][v.location] = "/test"
+
         print "\r\nRequest:\r\n"
         print self.currentRequest
         print "\r\n"
@@ -209,7 +224,8 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
     server_address = ('', port)
 
     HandlerClass.protocol_version = protocol
-    httpd = ServerClass( server_address, partial(HandlerClass, TestAppHandler().processRequest) )
+    httpd = ServerClass(server_address, \
+                partial(HandlerClass, TestAppHandler().processRequest))
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
