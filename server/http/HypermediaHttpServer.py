@@ -11,7 +11,6 @@ containing request and response elements used in processing the hypermedia.
 
 REQUEST
 URI
-(query) parameters
 content-format
 method
 payload
@@ -142,7 +141,6 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         """check payload length and copy if there is a nonzero payload"""
         self.contentLength = 0
         if "Content-Length" in self.headers:
-            """self.contentLength = int(self.headers.getheader('Content-Length'))"""
             self.contentLength = int(self.headers['Content-Length'])
             self.currentRequest[v.contentLength] = self.contentLength
             if (self.contentLength > 0): 
