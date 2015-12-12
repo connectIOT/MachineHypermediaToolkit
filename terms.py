@@ -54,25 +54,30 @@ toCode = {
           }
 
 """terms in link-format representations"""
-_href = "href",
-_anchor = "anchor",
+_href = "href"
+_anchor = "anchor"
 _rel = "rel",
-_self = "self",
-_sub = "sub",
-_rt = "rt",
-_ct = "ct",
-_if = "if",
-_sz = "sz",
+_self = "self"
+_sub = "sub"
+_item = "item"
+_rt = "rt"
+_ct = "ct"
+_if = "if"
+_sz = "sz"
+_null = ""
 
 """terms in senml and extensions"""
-_e = "e", #entities
-_l = "l", #links
-_bn = "bn", #base name (base uri)
-_n = "n", #name (uri)
-_u = "u", #units
-_v = "v", #numeric value
-_bv = "bv", #boolean value
-_sv = "sv", #string value
-_ov = "ov", #object value
+_e = "e" #entities
+_l = "l" #links
+_bn = "bn" #base name (base uri)
+_n = "n" #name (uri)
+_u = "u" #units
+_v = "v" #numeric value
+_bv = "bv" #boolean value
+_sv = "sv" #string value
+_ov = "ov" #object value
 
+linkFormatJsonType = "applicatoin/link-format+json"
+senmlType = "application/senml+json"
+senmlCollectionType = "application/collection+senml+json"
 
