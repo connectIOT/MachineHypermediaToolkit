@@ -139,13 +139,13 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
                     self.currentRequest[v.uriPath].append(self.pathElement)
             
         self.currentRequest[v.uriQuery] = {}
-        if self.path.find("/") >0:
+        if self.path.find("?") >0:
             for self.queryElement in self.path.split("?")[1].split("&"):
                 if self.queryElement.find("=") >0:
                     (self.k, self.v) = self.queryElement.split("=")
                     self.currentRequest[v.uriQuery][self.k] = self.v
                 else: 
-                    self.currentRequest[v.uriQuery][self.queryElement] = ""
+                    self.currentRequest[v.uriQuery][self.queryElement] = True
         
         """self.currentRequest[v.options] = {}
         for option in self.headers :
