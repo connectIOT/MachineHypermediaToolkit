@@ -180,6 +180,8 @@ class HypermediaHTTPRequestHandler(BaseHTTPRequestHandler):
         if v.payload in self.currentRequest[v.response]:
             self.contentLength = len(self.currentRequest[v.response][v.payload])
             self.payload = self.currentRequest[v.response][v.payload]
+            if v.contentFormat not in self.currentRequest[v.response]:
+                self.currentRequest[v.response][v.contentFormat] = self.currentRequest[v.contentFormat]
             self.send_header("Content-Length", str(self.contentLength))
             self.send_header("Content-Type", \
                              self.currentRequest[v.response][v.contentFormat])

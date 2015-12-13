@@ -78,7 +78,7 @@ _sv = "sv" #string value
 _ov = "ov" #object value
 
 plainTextType = "text/plain"
-linkFormatJsonType = "applicatoin/link-format+json"
+linkFormatJsonType = "application/link-format+json"
 senmlType = "application/senml+json"
 senmlCollectionType = "application/collection+senml+json"
 linkFormatMergeType = "application/merge-patch+json"
