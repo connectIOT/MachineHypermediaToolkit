@@ -13,8 +13,8 @@ class HypermediaResource(object) :
         PlainTextHandler(self)
         SenmlValueHandler(self)
 
-        self._value = {v._n:None}
-        self._linkArray = Links({v._href: "", v._rel: [v._self], v._rt: ["resource"]})
+        self._value = {v._v:None}
+        self._linkArray = Links({v._href: "", v._rel: v._self, v._rt: "resource"})
         
     def registerContentHandler(self, contentFormat, handler):
         self._contentFormats[contentFormat] = handler
