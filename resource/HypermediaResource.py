@@ -51,7 +51,7 @@ class LinkFormatPatchHandler:
         
     def _handleRequest(self, request):
         if request[v.method] == v.patch:
-            self._resource._linkArray.selectMerge( json.loads(request[v.uriQuery]), json.loads(request[v.payload]) )
+            self._resource._linkArray.selectMerge( request[v.uriQuery], json.loads(request[v.payload]) )
             request[v.response][v.status] = v.Success
         else:
             request[v.response][v.status] = v.MethodNotAllowed
