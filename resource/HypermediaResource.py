@@ -69,8 +69,17 @@ class PlainTextHandler:
                 if key in (v._v, v._bv, v._sv, v._ov):
                     request[v.response][v.payload] = json.dumps(self._resource._value[key])
             request[v.response][v.status] = v.Success
+            
         elif request[v.method] == v.put:
-            self._resource._value[v._v] = (json.loads(request[v.payload]))
+            self._newValue = (json.loads(request[v.payload]))
+            if isinstance(self._newValue, str) or isinstance(self._newValue, unicode):
+                self._resource._value[v._sv] = self._newValue
+            elif isinstance(self._newValue, bool):
+                self._resource._value[v._bv] = self._newValue
+            elif isinstance(self._newValue, list) or isinstance(self._newValue, dict):
+                self._resource._value[v._ov] = self._newValue
+            else:
+                self._resource._value[v._v] = self._newValue
             request[v.response][v.status] = v.Success
         else:
             request[v.response][v.status] = v.MethodNotAllowed
