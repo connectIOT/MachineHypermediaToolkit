@@ -65,7 +65,9 @@ class PlainTextHandler:
 
     def _handleRequest(self, request):
         if request[v.method] == v.get:
-            request[v.response][v.payload] = json.dumps(self._resource._value[v._v])
+            for key in self._resource._value:
+                if key in (v._v, v._bv, v._sv, v._ov):
+                    request[v.response][v.payload] = json.dumps(self._resource._value[key])
             request[v.response][v.status] = v.Success
         elif request[v.method] == v.put:
             self._resource._value[v._v] = (json.loads(request[v.payload]))
