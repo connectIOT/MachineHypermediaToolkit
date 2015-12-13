@@ -18,7 +18,7 @@ class Links(object) :
             self._links.append(links)
 
     def get(self, selectMap=None) :
-        if selectMap == None :
+        if selectMap == None or len(selectMap) == 0:
             return(self._links)
         else:
             self._result = []
@@ -47,7 +47,7 @@ class Links(object) :
         """returns a list of indices to links in the link array that match the query filter"""
         self._selection = []
         """check all links in the collection"""
-        for self._linkIndex in range(0, self._links.len()-1) :
+        for self._linkIndex in range(0, len(self._links)) :
             self._selected = True
             """test each attribute in the selectMap"""
             for attribute in selectMap :
@@ -77,6 +77,6 @@ class Links(object) :
                     break
             if self._selected :
                 self._selection.append(self._linkIndex)
-                    
+            
         return self._selection
 

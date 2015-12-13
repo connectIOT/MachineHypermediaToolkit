@@ -34,7 +34,7 @@ class LinkFormatHandler:
        
     def _handleRequest(self, request):
         if request[v.method] == v.get:
-            request[v.response][v.payload] = json.dumps(self._resource._linkArray.get())
+            request[v.response][v.payload] = json.dumps(self._resource._linkArray.get(request[v.uriQuery]))
             request[v.response][v.status] = v.Success
         elif request[v.method] == v.post:
             self._resource._linkArray.add(json.loads(request[v.payload]))
