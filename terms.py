@@ -77,7 +77,9 @@ _bv = "bv" #boolean value
 _sv = "sv" #string value
 _ov = "ov" #object value
 
+plainTextType = "text/plain"
 linkFormatJsonType = "applicatoin/link-format+json"
 senmlType = "application/senml+json"
 senmlCollectionType = "application/collection+senml+json"
-
+linkFormatMergeType = "application/merge-patch+json"
+linkFormatFormType = "application/forms+link-format+json"

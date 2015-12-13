@@ -34,7 +34,7 @@ class Links(object) :
                     self._links.remove(self._index)
                 else:
                     for attribute in mergeMap:
-                        if mergeMap[attribute] == "":
+                        if mergeMap[attribute] == None: 
                             del self._links[self._index][attribute]
                         else:
                             self._links[self._index][attribute] = mergeMap[attribute]
