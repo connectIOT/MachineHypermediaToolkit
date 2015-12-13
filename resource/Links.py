@@ -32,9 +32,10 @@ class Links(object) :
         if len(self._linkList) == 0:
             self.add(mergeMap)
         else:
+            self._linkList.reverse()
             for self._index in self._linkList :
                 if mergeMap == {} :
-                    self._links.remove(self._index)
+                    del self._links[self._index]
                 else:
                     for attribute in mergeMap:
                         if mergeMap[attribute] == None: 
