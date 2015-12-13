@@ -56,7 +56,7 @@ toCode = {
 """terms in link-format representations"""
 _href = "href"
 _anchor = "anchor"
-_rel = "rel",
+_rel = "rel"
 _self = "self"
 _sub = "sub"
 _item = "item"

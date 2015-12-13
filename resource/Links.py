@@ -5,7 +5,10 @@ class Links(object) :
     def __init__(self, links=None) :
         """initialize with a set of links default to none"""
         self._links = []
-        self._links.extend(links)
+        if isinstance(links, list) :
+            self._links.extend(links)
+        else :
+            self._links.append(links)
         
     def add(self, links) :
         """links contains a map or array of maps in link-format"""
