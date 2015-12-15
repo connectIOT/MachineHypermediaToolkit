@@ -24,40 +24,34 @@ class HypermediaResource(object) :
             self._contentHandlers[request[v.contentFormat]].handleRequest(request)        
         else:
             request[v.response][v.status] = v.UnsupportedType
+        return
 
 class ContentHandler:
     
     _contentFormat = None
-    
-    _preProcessors = []
-    _postProcessors = []
-    
+        
     def __init__(self, resource):
+        self._processors = []
         self._resource = resource
+        self.addProcessor(self._processRequest)
         self._resource.registerContentHandler(self._contentFormat, self)
+    
+    def addPreProcessor(self, processor):
+        self._processors.insert(0,processor)
+        
+    def addProcessor(self, processor):
+        self._processors.append(processor)
         
     def handleRequest(self, request):
-        if self._preProcess(request):
-            return
-        self._processRequest(request)
-        self._postProcess(request)
+        for process in self._processors:
+            if process(request):
+                return
         return
-    
-    def _preProcess(self, request):
-        for handler in self._preProcessors:
-            if handler(self._resource, request):
-                return(True)
-        return False
-  
+      
     def _processRequest(self, request):
         request[v.response][v.status] = v.ServerError
-        return
+        return 
         
-    def _postProcess(self, request):
-        for handler in self._postProcessors:
-            handler(self._resource, request)
-        return
-
 class LinkFormatHandler(ContentHandler):
     
     _contentFormat = v.linkFormatJsonType
