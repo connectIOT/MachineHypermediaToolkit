@@ -4,7 +4,7 @@ from HypermediaResource import HypermediaResource
 import sys
 
 def test(HandlerClass = HypermediaHTTPRequestHandler,
-         ServerClass = HypermediaHTTPServer, protocol="HTTP/1.0"):
+         ServerClass = HypermediaHTTPServer, protocol="HTTP/1.1"):
     """Test the HypermediaHTTP request handler class.
 
     This runs an HTTP server on port 8000 (or the first command line
