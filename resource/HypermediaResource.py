@@ -25,14 +25,34 @@ class HypermediaResource(object) :
         else:
             request[v.response][v.status] = v.UnsupportedType
 
-            
-class LinkFormatHandler:
+class ContentHandler:
     
-    def __init__(self, resource):
+    _contentFormat = None
+    
+    def __init__(self,resource):
         self._resource = resource
-        self._resource.registerContentHandler(v.linkFormatJsonType, self._handleRequest)
-       
+        self._resource.registerContentHandler(self._contentFormat, self._handleRequest)
+        
     def _handleRequest(self, request):
+        self._preProcess(request)
+        self._processRequest(request)
+        self._postProcess(request)
+        return
+    
+    def _preProcess(self, request):
+        pass
+  
+    def _processRequest(self, request):
+        request[v.response][v.status] = v.ServerError
+        
+    def _postProcess(self, request):
+        pass
+            
+class LinkFormatHandler(ContentHandler):
+    
+    _contentFormat = v.linkFormatJsonType
+       
+    def _processRequest(self, request):
         if request[v.method] == v.get:
             request[v.response][v.payload] = json.dumps(self._resource._linkArray.get(request[v.uriQuery]))
             request[v.response][v.status] = v.Success
@@ -43,13 +63,11 @@ class LinkFormatHandler:
             request[v.response][v.status] = v.MethodNotAllowed
 
                     
-class LinkFormatPatchHandler:
+class LinkFormatPatchHandler(ContentHandler):
+
+    _contentFormat = v.linkFormatMergeType
     
-    def __init__(self, resource):
-        self._resource = resource
-        self._resource.registerContentHandler(v.linkFormatMergeType, self._handleRequest)
-        
-    def _handleRequest(self, request):
+    def _processRequest(self, request):
         if request[v.method] == v.patch:
             self._resource._linkArray.selectMerge( request[v.uriQuery], json.loads(request[v.payload]) )
             request[v.response][v.status] = v.Success
@@ -57,13 +75,11 @@ class LinkFormatPatchHandler:
             request[v.response][v.status] = v.MethodNotAllowed
             
 
-class PlainTextHandler:
+class PlainTextHandler(ContentHandler):
     
-    def __init__(self, resource):
-        self._resource = resource
-        self._resource.registerContentHandler(v.plainTextType, self._handleRequest)
+    _contentFormat = v.plainTextType
 
-    def _handleRequest(self, request):
+    def _processRequest(self, request):
         if request[v.method] == v.get:
             for key in self._resource._value:
                 if key in (v._v, v._bv, v._sv, v._ov):
@@ -85,13 +101,11 @@ class PlainTextHandler:
             request[v.response][v.status] = v.MethodNotAllowed
 
 
-class SenmlValueHandler:
+class SenmlValueHandler(ContentHandler):
     
-    def __init__(self, resource):
-        self._resource = resource
-        self._resource.registerContentHandler(v.senmlType, self._handleRequest)
+    _contentFormat = v.senmlType
 
-    def _handleRequest(self, request):
+    def _processRequest(self, request):
         if request[v.method] == v.get:
             request[v.response][v.payload] = json.dumps(self._resource._value)
             request[v.response][v.status] = v.Success
