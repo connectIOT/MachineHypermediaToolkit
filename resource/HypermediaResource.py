@@ -7,7 +7,7 @@ class HypermediaResource(object) :
     
     def __init__(self):
         
-        self._contentFormats = {}
+        self._contentHandlers = {}
         LinkFormatHandler(self)
         LinkFormatPatchHandler(self)
         PlainTextHandler(self)
@@ -17,11 +17,11 @@ class HypermediaResource(object) :
         self._linkArray = Links({v._href: "", v._rel: v._self, v._rt: "resource"})
         
     def registerContentHandler(self, contentFormat, handler):
-        self._contentFormats[contentFormat] = handler
+        self._contentHandlers[contentFormat] = handler
         
     def handleRequest(self, request):
-        if request[v.contentFormat] in self._contentFormats:
-            self._contentFormats[request[v.contentFormat]](request)        
+        if request[v.contentFormat] in self._contentHandlers:
+            self._contentHandlers[request[v.contentFormat]].handleRequest(request)        
         else:
             request[v.response][v.status] = v.UnsupportedType
 
@@ -29,25 +29,35 @@ class ContentHandler:
     
     _contentFormat = None
     
-    def __init__(self,resource):
+    _preProcessors = []
+    _postProcessors = []
+    
+    def __init__(self, resource):
         self._resource = resource
-        self._resource.registerContentHandler(self._contentFormat, self._handleRequest)
+        self._resource.registerContentHandler(self._contentFormat, self)
         
-    def _handleRequest(self, request):
-        self._preProcess(request)
+    def handleRequest(self, request):
+        if self._preProcess(request):
+            return
         self._processRequest(request)
         self._postProcess(request)
         return
     
     def _preProcess(self, request):
-        pass
+        for handler in self._preProcessors:
+            if handler(self._resource, request):
+                return(True)
+        return False
   
     def _processRequest(self, request):
         request[v.response][v.status] = v.ServerError
+        return
         
     def _postProcess(self, request):
-        pass
-            
+        for handler in self._postProcessors:
+            handler(self._resource, request)
+        return
+
 class LinkFormatHandler(ContentHandler):
     
     _contentFormat = v.linkFormatJsonType
@@ -61,7 +71,6 @@ class LinkFormatHandler(ContentHandler):
             request[v.response][v.status] = v.Success
         else:
             request[v.response][v.status] = v.MethodNotAllowed
-
                     
 class LinkFormatPatchHandler(ContentHandler):
 
@@ -74,7 +83,6 @@ class LinkFormatPatchHandler(ContentHandler):
         else:
             request[v.response][v.status] = v.MethodNotAllowed
             
-
 class PlainTextHandler(ContentHandler):
     
     _contentFormat = v.plainTextType
@@ -85,7 +93,6 @@ class PlainTextHandler(ContentHandler):
                 if key in (v._v, v._bv, v._sv, v._ov):
                     request[v.response][v.payload] = json.dumps(self._resource._value[key])
             request[v.response][v.status] = v.Success
-            
         elif request[v.method] == v.put:
             self._newValue = (json.loads(request[v.payload]))
             if isinstance(self._newValue, str) or isinstance(self._newValue, unicode):
@@ -100,7 +107,6 @@ class PlainTextHandler(ContentHandler):
         else:
             request[v.response][v.status] = v.MethodNotAllowed
 
-
 class SenmlValueHandler(ContentHandler):
     
     _contentFormat = v.senmlType
@@ -114,5 +120,4 @@ class SenmlValueHandler(ContentHandler):
             request[v.response][v.status] = v.Success
         else:
             request[v.response][v.status] = v.MethodNotAllowed
-
 
