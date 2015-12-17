@@ -62,6 +62,8 @@ UnsupportedType   415              4.15
 ServerError       500              5.00
 
 JSON keys to the request-response interface are described in the example below.
+This is the common CRUD interface between HTTP and CoAP, and can be used as a 
+generic REST proxy.
 
 {
     "uriPath": ["/","a", "b"], 
