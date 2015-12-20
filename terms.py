@@ -77,6 +77,7 @@ _v = "v" #numeric value
 _bv = "bv" #boolean value
 _sv = "sv" #string value
 _ov = "ov" #object value
+_ev = "ev" #element value
 
 plainTextType = "text/plain"
 linkFormatJsonType = "application/link-format+json"
