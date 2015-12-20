@@ -18,9 +18,11 @@ class PlainTextHandler(ContentHandler):
             self._resourceName = self._resource._resourceName
         """ process item, resourceName is from request URI or from query filtering """
         if v.get == request[v.method] :
+            """ also check subresources """
             request[v.response][v.payload] = json.dumps(self._resource._itemArray.getValueByName(self._resourceName) )
             request[v.response][v.status] = v.Success
         elif v.put == request[v.method] :
+            """ check for subresources """
             self._resource._itemArray.updateValueByName(self._resourceName, json.loads(request[v.payload]))
             request[v.response][v.status] = v.Success
         else:
