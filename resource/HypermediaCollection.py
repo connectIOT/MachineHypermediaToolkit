@@ -81,5 +81,5 @@ class HypermediaCollection(HypermediaResource):
 
     def _createSubresource(self, resourceName):
         self._subresources[resourceName] = \
-            HypermediaCollection( self._rootResource, self._uriPath.append(resourceName) ) 
+            HypermediaCollection( self._rootResource, self._uriPath + [resourceName] ) 
        
