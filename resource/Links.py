@@ -2,18 +2,18 @@
 
 class Links(object) :
     
-    def __init__(self, links=None) :
-        """initialize with a set of links default to none"""
+    def __init__(self, getLinks=None) :
+        """initialize with a set of getLinks default to none"""
         self._links = []
-        if None != links:
-            self.add(links)
+        if None != getLinks:
+            self.add(getLinks)
             
-    def add(self, links) :
-        """links contains a map or array of maps in link-format"""
-        if isinstance(links, list) :
-            self._links.extend(links)
+    def add(self, getLinks) :
+        """getLinks contains a map or array of maps in link-format"""
+        if isinstance(getLinks, list) :
+            self._links.extend(getLinks)
         else :
-            self._links.append(links)
+            self._links.append(getLinks)
 
     def get(self, selectMap=None) :
         if selectMap == None or len(selectMap) == 0:
@@ -43,9 +43,9 @@ class Links(object) :
        
     def select(self, selectMap) :
         """selectMap contains a selection map in query filter format"""
-        """returns a list of indices to links in the link array that match the query filter"""
+        """returns a list of indices to getLinks in the link array that match the query filter"""
         self._selection = []
-        """check all links in the collection"""
+        """check all getLinks in the collection"""
         for self._linkIndex in range(0, len(self._links)) :
             self._selected = True
             """test each attribute in the selectMap"""
