@@ -35,6 +35,10 @@ class ContentHandler:
         self._resource = resource
         self.addProcessor(self._processRequest)
         self._resource.registerContentHandler(self._contentFormat, self)
+        self.__postInit__()
+        
+    def __postInit__(self):
+        pass
     
     def addPreProcessor(self, processor):
         self._processors.insert(0,processor)

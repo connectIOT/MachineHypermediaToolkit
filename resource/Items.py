@@ -5,7 +5,10 @@ class SenmlItems(object):
         self._items = []
         
     def add(self, items=[]):
-        self._items.extend(items)
+        if isinstance(items, list) :
+            self._items.extend(items)   
+        else :
+            self._items.append(items)   
         
     def remove(self, items=[]):
         for removeName in items:
