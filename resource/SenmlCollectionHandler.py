@@ -11,16 +11,15 @@ class SenmlCollectionHandler(ContentHandler):
         self._senml = SenmlCollection()
         
     def _processRequest(self, request):
-        self._selectedLinks = self._resource._linkArray.get(request[v.uriQuery])
+        self._senml.init( self._resource._linkArray.get(request[v.uriQuery]) )
         """ if the query is empty, all links are returned """
-        if [] == self._selectedLinks :
+        if [] == self._senml.links() :
             request[v.response][v.status] = v.NotFound
             return
         request[v.uriQuery] = {}
         if v.get == request[v.method]:
             """ return a representation of a senml instance with a links element"""
-            self._senml.init()
-            self._senml.addLinks(self._selectedLinks)
+            self._senml.init(self._selectedLinks)
             for self._link in self._selectedLinks:
                 if v._rel in self._link and v._item == self._link[v._rel] :
                     """ get item in local context and add to the result """
@@ -47,12 +46,13 @@ from Links import Links
          
 class SenmlCollection(Senml):
     
-    def __init__(self, items=None, links=None):
+    def __init__(self, links=None, items=None):
         Senml.__init__(items)
-        self._links = Links()
+        self._links = Links(links)
         self._senml[v._l] = self._links._links
-        if links != None:
-            self.addLinks(links)
+            
+    def init(self, items=None, links=None):
+        self.__init__(items, links)
                 
     def addLinks(self, links):        
             self.links.add(links)  

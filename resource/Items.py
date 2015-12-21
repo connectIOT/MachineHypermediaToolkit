@@ -1,8 +1,10 @@
 import terms as v
 
 class SenmlItems(object):
-    def __init__(self, resource):
+    def __init__(self, items=None):
         self._items = []
+        if None != items:
+            self.add(items)
         
     def add(self, items=[]):
         if isinstance(items, list) :

@@ -66,11 +66,12 @@ class SenmlHandler(ContentHandler):
         elif 1 == self._resource._unrouted :
             """ Select and process item """
             if v.get == request[v.method]:
+                self._senml.init()
                 request[v.response][v.payload] = \
-                        json.dumps( self._resource._itemArray.getItemByName(self._resource._resourceName) )
+                    self._senml.addItem(self._resource._itemArray.getItemByName(self._resource._resourceName)).serialize()
                 request[v.response][v.status] = v.Success
             elif v.put == request[v.method]:
-                self._resource._itemArray.updateItemByName( self._resource._resourceName, json.loads(request[v.payload]) )
+                self._resource._itemArray.updateItemByName(self._resource._resourceName, self._senml.load(request[v.payload]).items())
                 request[v.response][v.status] = v.Success
             else:
                 request[v.response][v.status] = v.MethodNotAllowed
@@ -83,13 +84,11 @@ class Senml():
     
     def __init__(self, items=None):
         self._senml = {}
-        self._items = SenmlItems()
+        self._items = SenmlItems(items)
         self._senml[v._e] = self._items._items
-        if items != None:
-            self.addItems(items)
         
-    def init(self):
-        self.__init__()
+    def init(self, items=None):
+        self.__init__(items)
         
     def addItems(self, items):
         self._items.add(items)
