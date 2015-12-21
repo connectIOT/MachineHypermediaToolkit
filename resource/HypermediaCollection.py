@@ -4,13 +4,17 @@ import terms as v
 from HypermediaResource import HypermediaResource
 from copy import deepcopy
 from Items import SenmlItems
+from PlainTextHandler import PlainTextHandler
+from SenmlHandler import SenmlHandler
+from SenmlCollectionHandler import SenmlCollectionHandler
 
 class HypermediaCollection(HypermediaResource):
 
     def __init__(self, rootResource=None, uriPath=["/"]):
         HypermediaResource.__init__()
-        self.SenmlHandler(self)
-        self.SenmlCollectionHandler(self)
+        PlainTextHandler(self)
+        SenmlHandler(self)
+        SenmlCollectionHandler(self)
 
         self._itemArray = SenmlItems(self)
         self._subresources = {}

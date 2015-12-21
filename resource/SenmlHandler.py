@@ -16,10 +16,11 @@ class SenmlHandler(ContentHandler):
                 DELETE, remove resources selected by query filter
             """
             self._selectedLinks = self._resource._linkArray.get(request[v.uriQuery])
+            """ if the query is empty, all links are returned """
             if [] == self._selectedLinks :
                 request[v.response][v.status] = v.NotFound
                 return
-            """ clear query parameters consumed at the path endpoint """
+            """ clear query parameters when consumed at the path endpoint """
             request[v.uriQuery] = {}
             if v.get == request[v.method]:
                 """ get returns items associated with selected links as a senml multi-resource instance"""
@@ -32,9 +33,11 @@ class SenmlHandler(ContentHandler):
                         """ get subresource item """
                         request[v.uriPath] = self._resource._uriPath + self._link[v._href]
                         self._subresources[self._link[v._href]].routeRequest(request)
+                        """ send request and wait for response """
                         if v.Success == request[v.response][v.status]:
                             self._selectedItems.append( json.loads(request[v.response][v.payload]) )
                         else:
+                            """ if there is any error, reutrn with the error status in the response """
                             return
                 request[v.response][v.payload] = json.dumps(self._selectedItems)                    
                 request[v.response][v.status] = v.Success
@@ -45,10 +48,13 @@ class SenmlHandler(ContentHandler):
                     for self._link in self._selectedLinks :
                         if self._link[v._href] == item[v._n]:
                             if v._rel in self._link and v._item == self._link[v._rel] :
-                                self._itemArray.updateItemByName(self._link[v._href], self._link)
+                                self._itemArray.updateItemByName(self._link[v._href], item)
                             elif v._rel in self._link and v._sub == self._link[v._rel] :
-                                """ route a request URI made from the collection path + resource name """
+                                """ route a request URI made from the collection path + resource name 
+                                    send the item with a zero length senml resource name """
                                 request[v.uriPath] = self._resource._uriPath + self._link[v._href]
+                                item[v._n] = ""
+                                request[v.payload] = json.dumps(item)
                                 self._subresources[self._link[v._href]].routeRequest(request)
                                 if v.Success != request[v.response][v.status]:
                                     return
@@ -56,7 +62,8 @@ class SenmlHandler(ContentHandler):
         elif 1 == self._resource._unrouted :
             """ Select and process item """
             if v.get == request[v.method]:
-                request[v.response][v.payload] = json.dumps( self._resource._itemArray.getItemByName(self._resource._resourceName) )
+                request[v.response][v.payload] = \
+                        json.dumps( self._resource._itemArray.getItemByName(self._resource._resourceName) )
                 request[v.response][v.status] = v.Success
             elif v.put == request[v.method]:
                 self._resource._itemArray.updateItemByName( self._resource._resourceName, json.loads(request[v.payload]) )
