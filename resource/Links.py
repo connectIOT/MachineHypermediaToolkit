@@ -8,12 +8,12 @@ class Links(object) :
         if None != getLinks:
             self.add(getLinks)
             
-    def add(self, getLinks) :
-        """getLinks contains a map or array of maps in link-format"""
-        if isinstance(getLinks, list) :
-            self._links.extend(getLinks)
+    def add(self, links) :
+        """links contains a map or array of maps in link-format"""
+        if isinstance(links, list) :
+            self._links.extend(links)
         else :
-            self._links.append(getLinks)
+            self._links.append(links)
 
     def get(self, selectMap=None) :
         if selectMap == None or len(selectMap) == 0:
