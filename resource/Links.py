@@ -2,11 +2,11 @@
 
 class Links(object) :
     
-    def __init__(self, getLinks=None) :
-        """initialize with a set of getLinks default to none"""
+    def __init__(self, links=None) :
+        """initialize with a set of links default to none"""
         self._links = []
-        if None != getLinks:
-            self.add(getLinks)
+        if None != links:
+            self.add(links)
             
     def add(self, links) :
         """links contains a map or array of maps in link-format"""
