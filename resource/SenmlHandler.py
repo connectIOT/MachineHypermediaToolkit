@@ -6,7 +6,7 @@ class SenmlHandler(ContentHandler):
     _contentFormat = v.senmlType
             
     def __postInit__(self):
-        self._senml = Senml()
+        self._senml = Senml(baseName=self._resource._pathString)
         
     def _processRequest(self, request):
         
@@ -84,13 +84,15 @@ import json
 
 class Senml():
     
-    def __init__(self, items=None):
+    def __init__(self, items=None, baseName=None):
         self._senml = {}
         self._items = SenmlItems(items)
         self._senml[v._e] = self._items._items
+        if None != baseName :
+            self._senml[v._bn] = baseName
         
-    def init(self, items=None):
-        self.__init__(items)
+    def init(self, items=None, baseName=None):
+        self.__init__(items, baseName)
         
     def addItems(self, items):
         self._items.add(items)

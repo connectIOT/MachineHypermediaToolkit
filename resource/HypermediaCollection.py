@@ -19,6 +19,9 @@ class HypermediaCollection(HypermediaResource):
         self._itemArray = SenmlItems(self)
         self._subresources = {}
         self._uriPath = uriPath
+        self._pathString = ""
+        for pathElement in uriPath:
+            self._pathString += pathElement
         if ["/"] == uriPath :
             self._rootResource = self
         else:
