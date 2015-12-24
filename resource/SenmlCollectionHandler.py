@@ -34,7 +34,7 @@ class SenmlCollectionHandler(ContentHandler):
                     if v.Success == request[v.response][v.status]:
                         self._senml.addItems( Senml.load(request[v.response][v.payload]).items() )
                     else:
-                        """ if there is any error, reutrn with the error status in the response """
+                        """ if there is any error, return with the error status in the response """
                         return
             request[v.response][v.payload] = self._senml.serialize()                    
             request[v.response][v.status] = v.Success
@@ -71,12 +71,9 @@ class SenmlCollection(Senml):
         self.__init__(items, links)
                 
     def addLinks(self, links):        
-            self.getLinks.add(links)  
+            self.links.add(links)  
             
     def getLinks(self, selectMap=None):
-        if None == selectMap:
-            return self._links._links
-        else:
             return self._links.get(selectMap)
 
     def load(self, jsonString):
