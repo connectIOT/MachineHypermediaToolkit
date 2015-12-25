@@ -63,7 +63,7 @@ from Links import Links
 class SenmlCollection(Senml):
     
     def __init__(self, links=None, items=None, baseName = None):
-        Senml.__init__(items, baseName)
+        Senml.__init__(self, items, baseName)
         self._links = Links(links)
         self._senml[v._l] = self._links._links
             

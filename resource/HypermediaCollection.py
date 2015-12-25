@@ -1,3 +1,46 @@
+"""
+Hypermedia Collection extends the Hypermedia Resource class by adding  hypermedia based URI routing and 
+senml modeling of items and subresources.
+
+
+Routing uses link relations rel=grp, rel=sub and rel=item
+
+routing is done by identifying subresources that match the next uri segment to be routed until the last
+segment in the request uri is identified for resource selection. Each collection routes requests in a 
+self contained way, using only knowledge of it's own uri path and it's direct subresources.
+
+group links labeled grp will be processed by forwarding the request to the href uri of the group link
+
+items are senml modeled values in the local context of the collection, stored in an array of objects.
+items are processed locally using the SenmlItems class in the same way an instance of the Links class 
+is used to store the collection's links.
+
+subresources are sub-collections in the context of the collection. requests to subresources are routed 
+to the subresources selected
+
+items and subresources are selected by either matching the resource uri with the request uri, or matching 
+the collection uri with the request uri and seleting the resource(s) using query filtering on the link 
+attributes, or by selecting the collection uri and matching resource names with senml names "n" in the 
+update body. 
+
+routing and group forwarding is done in this class, and resource processing e.g. GET, POST, is done in 
+the respective Content Handlers.
+
+resource endpoints are subresource collections with a single item, the item being referenced using the 
+name of the collection e.g. /a/b/c is the URI of a resource endpoint. The resource c is a collection 
+with a single item that is referenced by the base name and returns representations like this: 
+
+senml    { "bn": "/a/b/c", "e": {"sv": "test"} }
+
+collection+senml    { "l": {"href": "", "rel": "item"}, "bn": "/a/b/c", "e": {"sv": "test"} }
+
+Items and subresources are created by POSTing representations containing items and optionally links in
+the senml+collection content-format. THe location of the created resource will consist of the collection 
+uri and the resource name specified in the "href" link attribute or the "n" attribute of the corresponding
+senml element.
+    
+Links that fail to select a resource are returned with a status code of 404 Not Found
+"""
 
 import terms as v
 
@@ -11,7 +54,14 @@ from SenmlCollectionHandler import SenmlCollectionHandler
 class HypermediaCollection(HypermediaResource):
 
     def __init__(self, rootResource=None, uriPath=["/"]):
-        HypermediaResource.__init__()
+        HypermediaResource.__init__(self)
+        self._pathString = ""
+        for pathElement in uriPath:
+            self._pathString += pathElement
+        if ["/"] == uriPath :
+            self._rootResource = self
+        else:
+            self._rootResource = rootResource
         PlainTextHandler(self)
         SenmlHandler(self)
         SenmlCollectionHandler(self)
