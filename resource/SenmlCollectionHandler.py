@@ -7,7 +7,7 @@ class SenmlCollectionHandler(ContentHandler):
     _contentFormat = v.senmlCollectionType
     
     def __postInit__(self):
-        self._senml = SenmlCollection()
+        self._senml = SenmlCollection(baseName=self._resource._pathString)
         
     def _processRequest(self, request):
         
@@ -62,8 +62,8 @@ from Links import Links
          
 class SenmlCollection(Senml):
     
-    def __init__(self, links=None, items=None):
-        Senml.__init__(items)
+    def __init__(self, links=None, items=None, baseName = None):
+        Senml.__init__(self, items, baseName)
         self._links = Links(links)
         self._senml[v._l] = self._links._links
             
