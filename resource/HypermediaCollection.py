@@ -87,6 +87,7 @@ class HypermediaCollection(HypermediaResource):
             self._resourceName = self._request[v.uriPath][self._pathLen]
             if [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._sub}):
                 """ route request to subresource item"""
+                print "route to sub"
                 self._subresources[self._resourceName].routeRequest(self._request)
             elif [] != self.linkArray.get({v._href:self._resourceName, v._rel:v._item}) and self._unrouted == 1:
                 """ item in the local collection is selected, process content-format """
@@ -130,5 +131,6 @@ class HypermediaCollection(HypermediaResource):
 
     def _createSubresource(self, resourceName):
         self._subresources[resourceName] = \
-            HypermediaCollection( self._rootResource, self._uriPath + [resourceName] ) 
+            HypermediaCollection( self._rootResource, self._uriPath + [resourceName]) 
+        
        

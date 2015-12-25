@@ -28,8 +28,9 @@ class SenmlCollectionHandler(ContentHandler):
                     self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
                 elif v._rel in self._link and v._sub == self._link[v._rel] :
                     """ get subresource item """
-                    request[v.uriPath] = self._resource._uriPath + self._link[v._href]
-                    self._subresources[self._link[v._href]].routeRequest(request)
+                    request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
+                    print "send to sub"
+                    self._resource._subresources[self._link[v._href]].routeRequest(request)
                     """ send request and wait for response """
                     if v.Success == request[v.response][v.status]:
                         self._senml.addItems( Senml.load(request[v.response][v.payload]).items() )
@@ -56,7 +57,8 @@ class SenmlCollectionHandler(ContentHandler):
                 elif [] != self._senml.getLinks({v._href: item[v._n], v._rel: v._sub}):
                     """ make a subresource """
                     self._resource._createSubresource(item[v._n])
-            request[v.response][v.status] = v.Success
+            request[v.response][v.location] = item[v._n]
+            request[v.response][v.status] = v.Created
 
 
 from Links import Links
