@@ -15,7 +15,7 @@ class SenmlCollectionHandler(ContentHandler):
             """ return a representation of a collection+senml instance with links and items
                 first process the query and load the list of matching links into the senml 
                 object; if the query is empty, all links are returned """
-            self._senml.init( self._resource._linkArray.get(request[v.uriQuery]) )
+            self._senml.init( self._resource._linkArray.get(request[v.uriQuery]), baseName=self._resource._pathString )
             if [] == self._senml.getLinks() :
                 request[v.response][v.status] = v.NotFound
                 return
@@ -25,7 +25,7 @@ class SenmlCollectionHandler(ContentHandler):
             for self._link in self._senml.getLinks():
                 if v._rel in self._link and v._item == self._link[v._rel] :
                     """ get item in local context and add to the result """
-                    self._senml.addItems( self._itemArray.getItemByName(self._link[v._href]) )
+                    self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
                 elif v._rel in self._link and v._sub == self._link[v._rel] :
                     """ get subresource item """
                     request[v.uriPath] = self._resource._uriPath + self._link[v._href]
@@ -49,34 +49,36 @@ class SenmlCollectionHandler(ContentHandler):
                     """make a default item link if no link was provided for this item"""
                     self._senml.addLinks({v._href: item[v._n], v._rel: v._item})
                 """add the link to the links array"""
-                self._linkArray.add(self._senml.getLinks({v._href: item[v._n]}) )
+                self._resource._linkArray.add(self._senml.getLinks({v._href: item[v._n]}) )
                 if [] != self._senml.getLinks({v._href: item[v._n], v._rel: v._item}):
                     """ make an item """
                     self._resource._itemArray.add(item)
                 elif [] != self._senml.getLinks({v._href: item[v._n], v._rel: v._sub}):
                     """ make a subresource """
                     self._resource._createSubresource(item[v._n])
+            request[v.response][v.status] = v.Success
 
 
 from Links import Links
          
 class SenmlCollection(Senml):
     
-    def __init__(self, links=None, items=None, baseName = None):
+    def __init__(self, links=None, items=None, baseName=None):
         Senml.__init__(self, items, baseName)
         self._links = Links(links)
         self._senml[v._l] = self._links._links
-            
-    def init(self, items=None, links=None):
-        self.__init__(items, links)
+        
+    def init(self, items=None, links=None, baseName=None):
+        self.__init__(items, links, baseName)
                 
     def addLinks(self, links):        
-            self.links.add(links)  
+            self._links.add(links)  
             
     def getLinks(self, selectMap=None):
             return self._links.get(selectMap)
 
     def load(self, jsonString):
-        Senml.load(jsonString)
-        self._senml.addLinks(self._loadObject[v._l])
+        Senml.load(self, jsonString)
+        if v._l in self._loadObject :
+            self.addLinks(self._loadObject[v._l])
 

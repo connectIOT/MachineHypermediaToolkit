@@ -31,14 +31,14 @@ class SenmlHandler(ContentHandler):
                 for self._link in self._selectedLinks :
                     if v._rel in self._link and v._item == self._link[v._rel] :
                         """ get item in local context and add to the result """
-                        self._senml.addItem( self._itemArray.getItemByName(self._link[v._href]) )
+                        self._senml.addItems( self._itemArray.getItemByName(self._link[v._href]) )
                     elif v._rel in self._link and v._sub == self._link[v._rel] :
                         """ get subresource item """
                         request[v.uriPath] = self._resource._uriPath + self._link[v._href]
                         self._subresources[self._link[v._href]].routeRequest(request)
                         """ send request and wait for response """
                         if v.Success == request[v.response][v.status]:
-                            self._senml.addItem( Senml.load(request[v.response][v.payload]).items() )
+                            self._senml.addItems( Senml.load(request[v.response][v.payload]).items() )
                         else:
                             """ if there is any error, reutrn with the error status in the response """
                             return
@@ -102,7 +102,7 @@ class Senml():
     
     def load(self, jsonString):
         self._loadObject = json.loads(jsonString)
-        self._senml.addItems(self._loadObject[v._e])
+        self.addItems(self._loadObject[v._e])
         
     def items(self):
         return self._items._items
