@@ -31,11 +31,11 @@ class SenmlHandler(ContentHandler):
                 for self._link in self._selectedLinks :
                     if v._rel in self._link and v._item == self._link[v._rel] :
                         """ get item in local context and add to the result """
-                        self._senml.addItems( self._itemArray.getItemByName(self._link[v._href]) )
+                        self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
                     elif v._rel in self._link and v._sub == self._link[v._rel] :
                         """ get subresource item """
-                        request[v.uriPath] = self._resource._uriPath + self._link[v._href]
-                        self._subresources[self._link[v._href]].routeRequest(request)
+                        request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
+                        self._resource._subresources[self._link[v._href]].routeRequest(request)
                         """ send request and wait for response """
                         if v.Success == request[v.response][v.status]:
                             self._senml.addItems( Senml.load(request[v.response][v.payload]).items() )
@@ -56,10 +56,10 @@ class SenmlHandler(ContentHandler):
                             elif v._rel in self._link and v._sub == self._link[v._rel] :
                                 """ route a request URI made from the collection path + resource name 
                                     send the item with a zero length senml resource name """
-                                request[v.uriPath] = self._resource._uriPath + self._link[v._href]
+                                request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
                                 item[v._n] = ""
                                 request[v.payload] = Senml(item).serialize()
-                                self._subresources[self._link[v._href]].routeRequest(request)
+                                self._resource._subresources[self._link[v._href]].routeRequest(request)
                                 if v.Success != request[v.response][v.status]:
                                     return
  

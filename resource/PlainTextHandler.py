@@ -12,7 +12,8 @@ class PlainTextHandler(ContentHandler):
             """ process collection URI, select by query parameters """
             self._selectedLinks = self._resource._linkArray.get(request[v.uriQuery])
             if 1 == len(self._selectedLinks):
-                self._resourceName = self._selectedLinks[0][v._href]
+                self._link = self._selectedLinks[0]
+                self._resourceName = self._link[v._href]
             else:
                 request[v.response][v.status] = v.NotFound
         else:
@@ -26,7 +27,7 @@ class PlainTextHandler(ContentHandler):
                 request[v.response][v.status] = v.Success
             elif v._rel in self._link and v._sub == self._link[v._rel] :
                 """ get subresource item """
-                request[v.uriPath] = self._resource._uriPath + self._link[v._href]
+                request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
                 self._subresources[self._link[v._href]].routeRequest(request)
                 """ send request and wait for response """                    
                 return
@@ -36,7 +37,7 @@ class PlainTextHandler(ContentHandler):
                 request[v.response][v.status] = v.Success
             elif v._rel in self._link and v._sub == self._link[v._rel] :
                 """ route a request URI made from the collection path + resource name """
-                request[v.uriPath] = self._resource._uriPath + self._link[v._href]
+                request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
                 self._subresources[self._link[v._href]].routeRequest(request)
         else:
             request[v.response][v.status] = v.MethodNotAllowed
