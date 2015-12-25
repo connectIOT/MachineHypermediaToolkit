@@ -66,16 +66,12 @@ class HypermediaCollection(HypermediaResource):
         SenmlHandler(self)
         SenmlCollectionHandler(self)
 
-        self._itemArray = SenmlItems(self)
+        self._itemArray = SenmlItems()
         self._subresources = {}
         self._uriPath = uriPath
         self._pathString = ""
         for pathElement in uriPath:
             self._pathString += pathElement
-        if ["/"] == uriPath :
-            self._rootResource = self
-        else:
-            self._rootResource = rootResource
         self._unrouted = 0
 
     def routeRequest(self, request):  
