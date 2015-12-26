@@ -46,39 +46,40 @@ class SenmlHandler(ContentHandler):
                         self._result._items.updateItemByName(v._null, self._updateItem )
                         self._senml.addItems( self._result.items() )
                     else:
-                        """ if there is any error, reutrn with the error status in the response """
+                        """ if there is any error, reuturn with the error status in the response """
                         return
                 request[v.response][v.payload] = self._senml.serialize()                    
                 request[v.response][v.status] = v.Success
                 
             elif v.put == request[v.method]:
-                """ FIXME follow GET pattern for resource selection and subresource handling"""
-                """put updates the selected resources with the items in the payload  """ 
+                """put updates the selected resources with the matching name items in the payload """ 
                 self._senml.load(request[v.payload])
                 for item in self._senml.items():
-                    for self._link in self._selectedLinks :
+                    for self._link in self._selectedLinks.get({v._rel:v._item}) :
                         if self._link[v._href] == item[v._n]:
-                            if v._rel in self._link and v._item == self._link[v._rel] :
-                                self._itemArray.updateItemByName(self._link[v._href], item)
-                            elif v._rel in self._link and v._sub == self._link[v._rel] :
-                                """ route a request URI made from the collection path + resource name 
-                                    send the item with a zero length senml resource name """
-                                request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
-                                item[v._n] = ""
-                                request[v.payload] = Senml(item).serialize()
-                                self._resource._subresources[self._link[v._href]].routeRequest(request)
-                                if v.Success != request[v.response][v.status]:
-                                    return
- 
+                            self._resource._itemArray.updateItemByName(self._link[v._href], item)
+                    for self._link in self._selectedLinks.get({v._rel:v._sub}) :
+                        """ route a request URI made from the collection path + resource name 
+                            send the item with a zero length senml resource name """
+                        request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
+                        item[v._n] = ""
+                        request[v.payload] = Senml(item).serialize()
+                        request[v.uriQuery] = {v._href:v._null}
+                        self._resource._subresources[self._link[v._href]].routeRequest(request)
+                        if v.Success != request[v.response][v.status]:
+                            return
+                request[v.response][v.status] = v.Success
+
         elif 1 == self._resource._unrouted :
             """ Select and process item """
             if v.get == request[v.method]:
                 self._senml.init()
                 request[v.response][v.payload] = \
-                    self._senml.addItem(self._resource._itemArray.getItemByName(self._resource._resourceName)).serialize()
+                    self._senml.addItems(self._resource._itemArray.getItemByName(self._resource._resourceName)).serialize()
                 request[v.response][v.status] = v.Success
             elif v.put == request[v.method]:
-                self._resource._itemArray.updateItemByName(self._resource._resourceName, self._senml.load(request[v.payload]).items())
+                self._senml.load(request[v.payload])
+                self._resource._itemArray.updateItemByName(self._resource._resourceName, self._senml.items())
                 request[v.response][v.status] = v.Success
             else:
                 request[v.response][v.status] = v.MethodNotAllowed
