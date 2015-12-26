@@ -29,7 +29,7 @@ class SenmlItems(object):
         for item in self._items:
             if item[v._n] == itemName:
                 updateItem[v._n] = itemName
-                item = updateItem
+                self._items[self._items.index(item)] = updateItem
                 return item
         else:
             return False
