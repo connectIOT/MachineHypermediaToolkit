@@ -56,24 +56,22 @@ class HypermediaCollection(HypermediaResource):
     def __init__(self, rootResource=None, uriPath=["/"], resourceItem=None ):
         HypermediaResource.__init__(self)
         self._uriPath = uriPath
-        self._pathString = ""
-        for pathElement in uriPath:
-            self._pathString += pathElement
+        self._pathString = "/"
+        for pathElement in uriPath[1:]:
+            self._pathString += (pathElement + "/")
+        self._pathLen = len(self._uriPath)
         if ["/"] == uriPath :
             self._rootResource = self
         else:
             self._rootResource = rootResource
+        self._unrouted = 0
             
         self._itemArray = SenmlItems()
         self._subresources = {}
-        self._pathString = ""
-        for pathElement in uriPath:
-            self._pathString += pathElement
-        self._pathLen = len(self._uriPath)
-        self._unrouted = 0
+        
         """ if there is an item in the constructor, null the resource name and add it to items """
         if None != resourceItem :
-            resourceItem[v._n] = ""
+            resourceItem[v._n] = v._null
             self._itemArray.add(resourceItem)
             self._linkArray.selectMerge({v._href:v._null},{ v._rel: v._item})
 
@@ -95,7 +93,7 @@ class HypermediaCollection(HypermediaResource):
             if [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._sub}):
                 """ route request to subresource item"""
                 self._subresources[self._resourceName].routeRequest(self._request)
-            elif [] != self.linkArray.get({v._href:self._resourceName, v._rel:v._item}) and self._unrouted == 1:
+            elif [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._item}) and self._unrouted == 1:
                 """ item in the local collection is selected, process content-format """
                 self.handleRequest(self._request)
             else:

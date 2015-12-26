@@ -21,11 +21,9 @@ class SenmlCollectionHandler(ContentHandler):
                 return
             """ clear the query parameters as they are consumed """
             request[v.uriQuery] = {}
-            """ get representations of the items """
-            for self._link in self._senml.getLinks():
-                if v._rel in self._link and v._item == self._link[v._rel] :
-                    """ get item in local context and add to the result """
-                    self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
+            """ get items in local context and add to the result """
+            for self._link in self._senml._links.get({v._rel:v._item}) :
+                self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
                     
             request[v.response][v.payload] = self._senml.serialize()                    
             request[v.response][v.status] = v.Success
