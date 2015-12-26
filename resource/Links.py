@@ -39,7 +39,10 @@ class Links(object) :
                         if mergeMap[attribute] == None: 
                             del self._links[self._index][attribute]
                         else:
-                            self._links[self._index][attribute] = mergeMap[attribute]
+                            if isinstance(self._links[self._index][attribute], list):
+                                self._links[self._index][attribute].append(mergeMap[attribute])
+                            else:
+                                self._links[self._index][attribute] = mergeMap[attribute]
        
     def select(self, selectMap) :
         """selectMap contains a selection map in query filter format"""
