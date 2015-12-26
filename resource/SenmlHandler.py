@@ -1,4 +1,5 @@
 import terms as v
+from Links import Links
 from HypermediaResource import ContentHandler
 
 class SenmlHandler(ContentHandler):
@@ -17,9 +18,9 @@ class SenmlHandler(ContentHandler):
                 PUT, POST - name match with SenML "n" and query filter
                 DELETE, remove resources selected by query filter
             """
-            self._selectedLinks = self._resource._linkArray.get(request[v.uriQuery])
+            self._selectedLinks = Links(self._resource._linkArray.get(request[v.uriQuery]))
             """ if the query is empty, all links are returned """
-            if [] == self._selectedLinks :
+            if [] == self._selectedLinks.get() :
                 request[v.response][v.status] = v.NotFound
                 return
             """ clear query parameters when consumed at the path endpoint """
@@ -28,20 +29,19 @@ class SenmlHandler(ContentHandler):
             if v.get == request[v.method]:
                 """ get returns items associated with selected links as a senml multi-resource instance"""
                 self._senml.init()
-                for self._link in self._selectedLinks :
-                    if v._rel in self._link and v._item == self._link[v._rel] :
-                        """ get item in local context and add to the result """
-                        self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
-                    elif v._rel in self._link and v._sub == self._link[v._rel] :
-                        """ get subresource item """
-                        request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
-                        self._resource._subresources[self._link[v._href]].routeRequest(request)
-                        """ send request and wait for response """
-                        if v.Success == request[v.response][v.status]:
-                            self._senml.addItems( Senml.load(request[v.response][v.payload]).items() )
-                        else:
-                            """ if there is any error, reutrn with the error status in the response """
-                            return
+                for self._link in self._selectedLinks.get({v._rel:v._item}) :
+                    """ get items in local context and add to the result """
+                    self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
+                for self._link in self._selectedLinks.get({v._rel:v._sub}) :
+                    """ get subresource items """
+                    request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
+                    self._resource._subresources[self._link[v._href]].routeRequest(request)
+                    """ send request and wait for response """
+                    if v.Success == request[v.response][v.status]:
+                        self._senml.addItems( Senml(request[v.response][v.payload]).items() )
+                    else:
+                        """ if there is any error, reutrn with the error status in the response """
+                        return
                 request[v.response][v.payload] = self._senml.serialize()                    
                 request[v.response][v.status] = v.Success
                 
@@ -89,10 +89,11 @@ class Senml():
         self._items = SenmlItems(items)
         self._senml[v._e] = self._items._items
         if None != baseName :
+            self._baseName = baseName
             self._senml[v._bn] = baseName
         
-    def init(self, items=None, baseName=None):
-        self.__init__(items, baseName)
+    def init(self, items=None):
+        self.__init__(items, self._baseName)
         
     def addItems(self, items):
         self._items.add(items)

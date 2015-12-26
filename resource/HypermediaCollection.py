@@ -55,6 +55,7 @@ class HypermediaCollection(HypermediaResource):
 
     def __init__(self, rootResource=None, uriPath=["/"], resourceItem=None ):
         HypermediaResource.__init__(self)
+        self._uriPath = uriPath
         self._pathString = ""
         for pathElement in uriPath:
             self._pathString += pathElement
@@ -63,27 +64,27 @@ class HypermediaCollection(HypermediaResource):
         else:
             self._rootResource = rootResource
             
+        self._itemArray = SenmlItems()
+        self._subresources = {}
+        self._pathString = ""
+        for pathElement in uriPath:
+            self._pathString += pathElement
+        self._pathLen = len(self._uriPath)
+        self._unrouted = 0
+        """ if there is an item in the constructor, null the resource name and add it to items """
+        if None != resourceItem :
+            resourceItem[v._n] = ""
+            self._itemArray.add(resourceItem)
+            self._linkArray.selectMerge({v._href:v._null},{ v._rel: v._item})
+
         PlainTextHandler(self)
         SenmlHandler(self)
         SenmlCollectionHandler(self)
 
-        self._itemArray = SenmlItems()
-        self._subresources = {}
-        self._uriPath = uriPath
-        self._pathString = ""
-        for pathElement in uriPath:
-            self._pathString += pathElement
-        self._unrouted = 0
-        """ if there is an item in the constructor, null the resource name and add it to items """
-        if None != resourceItem :
-            resourceItem[v._href] = ""
-            self._itemArray.add(resourceItem)
-            self._linkArray.selectMerge({v._href:v._null},{ v._rel: v._item})
             
     def routeRequest(self, request):  
         self._request = request
-        self._pathLen = len(self._uriPath)
-        self._unrouted = len(request[v.uriPath]) - self._pathLen  
+        self._unrouted = len(request[v.uriPath]) - self._pathLen
             
         if 0 == self._unrouted:
             """ this resource is selected, process content-format """
@@ -93,7 +94,6 @@ class HypermediaCollection(HypermediaResource):
             self._resourceName = self._request[v.uriPath][self._pathLen]
             if [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._sub}):
                 """ route request to subresource item"""
-                print "route to sub"
                 self._subresources[self._resourceName].routeRequest(self._request)
             elif [] != self.linkArray.get({v._href:self._resourceName, v._rel:v._item}) and self._unrouted == 1:
                 """ item in the local collection is selected, process content-format """

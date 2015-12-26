@@ -31,8 +31,8 @@ class SenmlCollectionHandler(ContentHandler):
             request[v.response][v.status] = v.Success
             
         elif v.post == request[v.method]:
-            """ create new items in the collection. Takes a senml document with or without 
-                a links element. If the links element is elided, default links are constructed """
+            """ create new links and items in the collection. Takes a collection+senml document with optional
+                links and items. If the links element is elided, default links are constructed """
             self._location = None
             self._senml.init()
             self._senml.load(request[v.payload])
@@ -44,19 +44,18 @@ class SenmlCollectionHandler(ContentHandler):
             """ make links and resources """
             for self._link in self._senml.getLinks():
                 self._resource._linkArray.add(self._link)
-                """ if the link relation has an item value, 
-                    make an item assuming there is a named element in the senml"""
+                
                 if [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._item}):
-                    """ if the link relation has an item value, 
-                        make an item assuming there is a named element in the senml"""
-                    self._resource._itemArray.add(self._senml.getItemByName(self._link[v._href]))
+                # if the link relation has an item value, make an item from the named senml element 
+                    self._resource._itemArray.add(self._senml._items.getItemByName(self._link[v._href]))
                     self._location = self._link[v._href]
+                    
+                # if the link relation has a sub resource value, make a sub resource with optional element
                 elif [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._sub}):
-                    """ if the link relation has a subresource value, 
-                        make a subresource """
                     self._newResource = self._resource._createSubresource \
-                        ( self._link[v._href], self._senml.getItemByName(self._link[v._href]) )
+                        ( self._link[v._href], self._senml._items.getItemByName(self._link[v._href]) )
                     self._location = self._link[v._href]
+                    
             """ return the resource name of the last resource created """   
             if None != self._location :     
                 request[v.response][v.location] = self._location
