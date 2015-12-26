@@ -33,8 +33,9 @@ class SenmlHandler(ContentHandler):
                     """ get items in local context and add to the result """
                     self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
                 for self._link in self._selectedLinks.get({v._rel:v._sub}) :
-                    """ get subresource items """
+                    """ get the item at each subresource uri but not it's subresources or named items """
                     request[v.uriPath] = self._resource._uriPath + [self._link[v._href]]
+                    request[v.uriQuery] = {v._href:v._null}
                     self._resource._subresources[self._link[v._href]].routeRequest(request)
                     """ send request and wait for response """
                     if v.Success == request[v.response][v.status]:
@@ -51,7 +52,8 @@ class SenmlHandler(ContentHandler):
                 request[v.response][v.status] = v.Success
                 
             elif v.put == request[v.method]:
-                """ put updates the selected resources with the items in the payload  """ 
+                """ FIXME follow GET pattern for resource selection and subresource handling"""
+                """put updates the selected resources with the items in the payload  """ 
                 self._senml.load(request[v.payload])
                 for item in self._senml.items():
                     for self._link in self._selectedLinks :

@@ -90,12 +90,12 @@ class HypermediaCollection(HypermediaResource):
             self.handleRequest(self._request)
         else:
             self._resourceName = self._request[v.uriPath][self._pathLen]
-            if [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._sub}):
+            if 1 == self._unrouted and [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._item}) :
+                """ item in the local collection is selected, handle content-format in this context"""
+                self.handleRequest(self._request)
+            elif [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._sub}):
                 """ route request to subresource item"""
                 self._subresources[self._resourceName].routeRequest(self._request)
-            elif [] != self._linkArray.get({v._href:self._resourceName, v._rel:v._item}) and self._unrouted == 1:
-                """ item in the local collection is selected, process content-format """
-                self.handleRequest(self._request)
             else:
                 """ nothing to route or process """
                 self._request[v.response][v.status] = v.NotFound
