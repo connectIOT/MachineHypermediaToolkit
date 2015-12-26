@@ -21,7 +21,7 @@ def test(HandlerClass = HypermediaHTTPRequestHandler,
     HandlerClass.protocol_version = protocol
     resourceBase = HypermediaCollection()
     httpd = ServerClass(server_address, \
-                partial(HandlerClass, resourceBase.handleRequest))
+                partial(HandlerClass, resourceBase.routeRequest))
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
