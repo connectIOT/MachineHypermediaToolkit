@@ -38,7 +38,12 @@ class SenmlHandler(ContentHandler):
                     self._resource._subresources[self._link[v._href]].routeRequest(request)
                     """ send request and wait for response """
                     if v.Success == request[v.response][v.status]:
-                        self._senml.addItems( Senml(request[v.response][v.payload]).items() )
+                        self._result = Senml()
+                        self._result.load(request[v.response][v.payload])
+                        self._updateItem = self._result._items.getItemByName(v._null)
+                        self._updateItem[v._n] = self._link[v._href]
+                        self._result._items.updateItemByName(v._null, self._updateItem )
+                        self._senml.addItems( self._result.items() )
                     else:
                         """ if there is any error, reutrn with the error status in the response """
                         return
