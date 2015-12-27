@@ -15,17 +15,16 @@ class PlainTextHandler(ContentHandler):
             self._itemLinks = Links(self._resource._linkArray.get(request[v.uriQuery])).get({v._rel:v._item})
             self._subLinks = Links(self._resource._linkArray.get(request[v.uriQuery])).get({v._rel:v._sub})
             if 1 == len(self._itemLinks) and 0 == len(self._subLinks) :
-                self._link = self._itemLinks[0]
-                self._resourceName = self._link[v._href]
+                self._resourceName = self._itemLinks[0][v._href]
             elif 1 == len(self._subLinks) and 0 == len(self._itemLinks) :
-                self._link = self._subLinks[0]
-                self._resourceName = self._link[v._href]
+                self._resourceName = self._subLinks[0][v._href]
             else:
                 request[v.response][v.status] = v.NotFound
-        else:
+        elif 1 == self._resource._unrouted :
             """ a local context item matched the last path element, _resourceName is set in the resource """
             self._resourceName = self._resource._resourceName
-            self._link = self._resource._linkArray.get({v._href: self._resourceName, v._rel: v._item})
+        else:
+            request[v.response][v.status] = v.ServerError
             
         """ process item, resourceName is from request URI or from query filtering """
         if v.get == request[v.method] :
@@ -50,7 +49,7 @@ class PlainTextHandler(ContentHandler):
             elif 1 == len(self._subLinks) :
                 """ route a request URI made from the collection path + resource name """
                 request[v.uriPath] = self._resource._uriPath + [self._resourceName]
-                self._resource._subresources[self._link[v._href]].routeRequest(request)
+                self._resource._subresources[self._resourceName].routeRequest(request)
             else:
                 request[v.response][v.status] = v.NotFound
         else:
