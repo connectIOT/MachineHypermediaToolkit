@@ -69,6 +69,8 @@ class SenmlHandler(ContentHandler):
                         if v.Success != request[v.response][v.status]:
                             return
                 request[v.response][v.status] = v.Success
+            else:
+                request[v.response][v.status] = v.MethodNotAllowed
 
         elif 1 == self._resource._unrouted :
             """ Select and process item """
@@ -84,7 +86,7 @@ class SenmlHandler(ContentHandler):
             else:
                 request[v.response][v.status] = v.MethodNotAllowed
         else:
-            request[v.response][v.status] = v.BadRequest
+            request[v.response][v.status] = v.ServerError
 
 
 from Items import SenmlItems

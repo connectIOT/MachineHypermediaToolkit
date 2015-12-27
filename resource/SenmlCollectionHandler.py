@@ -41,13 +41,14 @@ class SenmlCollectionHandler(ContentHandler):
                     
             """ make links and resources """
             for self._link in self._senml.getLinks():
+                if [] != self._resource._linkArray.get({v._href:self._link[v._href]}) :
+                    request[v.response][v.status] = v.Conflict
+                    return  
                 self._resource._linkArray.add(self._link)
-                
-                if [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._item}):
                 # if the link relation has an item value, make an item from the named senml element 
+                if [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._item}):
                     self._resource._itemArray.add(self._senml._items.getItemByName(self._link[v._href]))
                     self._location = self._link[v._href]
-                    
                 # if the link relation has a sub resource value, make a sub resource with optional element
                 elif [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._sub}):
                     self._newResource = self._resource._createSubresource \
@@ -60,8 +61,10 @@ class SenmlCollectionHandler(ContentHandler):
                 request[v.response][v.status] = v.Created
             else:
                 request[v.response][v.status] = v.Success
+        else:
+            request[v.response][v.status] = v.MethodNotAllowed
+        
                 
-
 from Links import Links
          
 class SenmlCollection(Senml):
