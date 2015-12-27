@@ -74,12 +74,12 @@ class SenmlHandler(ContentHandler):
             """ Select and process item """
             if v.get == request[v.method]:
                 self._senml.init()
-                request[v.response][v.payload] = \
-                    self._senml.addItems(self._resource._itemArray.getItemByName(self._resource._resourceName)).serialize()
+                self._senml.addItems(self._resource._itemArray.getItemByName(self._resource._resourceName))                 
+                request[v.response][v.payload] = self._senml.serialize()
                 request[v.response][v.status] = v.Success
             elif v.put == request[v.method]:
                 self._senml.load(request[v.payload])
-                self._resource._itemArray.updateItemByName(self._resource._resourceName, self._senml.items())
+                self._resource._itemArray.updateItemByName(self._resource._resourceName, self._senml.items().pop())
                 request[v.response][v.status] = v.Success
             else:
                 request[v.response][v.status] = v.MethodNotAllowed
