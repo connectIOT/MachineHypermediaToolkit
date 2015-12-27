@@ -79,7 +79,8 @@ class HypermediaCollection(HypermediaResource):
         SenmlHandler(self)
         SenmlCollectionHandler(self)
 
-            
+    """ Route requests using hyperlinks. Link relations "item" and "sub" are used to identify 
+        local items in the collection and sub resources, respectively."""        
     def routeRequest(self, request):  
         self._request = request
         self._unrouted = len(request[v.uriPath]) - self._pathLen
