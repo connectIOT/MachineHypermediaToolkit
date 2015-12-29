@@ -53,6 +53,23 @@ toCode = {
           ServerError: 500
           }
 
+toStatus = {
+          200: Success,
+          201: Created,
+          202: Success,
+          204: Success,
+          400: BadRequest,
+          401: Unauthorized,
+          403: Forbidden,
+          404: NotFound,
+          405: MethodNotAllowed,
+          406: NotAcceptable,
+          409: Conflict,
+          412: PrecondFailed,
+          415: UnsupportedType,
+          500: ServerError
+          }
+
 """terms in link-format representations"""
 _href = "href"
 _anchor = "anchor"
