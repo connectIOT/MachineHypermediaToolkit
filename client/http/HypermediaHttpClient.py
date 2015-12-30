@@ -91,6 +91,7 @@ __version__ = "0.1"
 from httplib import HTTPConnection
 import terms as v
 import time
+import json
 
 class HypermediaHttpRequester():
     
@@ -120,7 +121,8 @@ class HypermediaHttpRequester():
                 
         self._payload = None    
         if v.payload in self._requestMap:
-            self._payload = self._requestMap[v.payload]
+            self._payload = json.dumps(self._requestMap[v.payload])
+            print self._payload
         
         self._requestMap[v.options] = {}
         self._requestMap[v.options][v.contentFormat] = self._requestMap[v.contentFormat]
@@ -166,9 +168,17 @@ def selfTest():
         _currentTime = time.clock()
         print "ms: %4.1f" % (1000* (_currentTime - _markTime))
         print "response body: ", (requestMap[v.response][v.payload])
+        
+    requestMap = { v.method:v.post, v.uriPath:["/"], v.contentFormat:v.senmlCollectionType, \
+                  v.payload: {"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","v":"test"}]} }
+    
+    request = HypermediaHttpRequester(host,port)
+    request.send(requestMap)
+    request.getResponse()
+    print "Status: ", requestMap[v.response][v.status], "Location", requestMap[v.options][v.location]
     
     while True:
-        requestMap = { v.method:v.get, v.uriPath:["/"], v.uriQuery: {v._href:"test", v._rel:v._sub}, v.contentFormat:v.plainTextType }
+        requestMap = { v.method:v.get, v.uriPath:["/", "test"], v.contentFormat:v.senmlCollectionType }
         request = HypermediaHttpRequester(host,port)
         _markTime = time.clock()
         request.send(requestMap, handleResponse)
