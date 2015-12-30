@@ -88,43 +88,14 @@ Client processes the response and updates application state
 """
 __version__ = "0.1"
 
+from HypermediaRequest import HypermediaRequest
 from httplib import HTTPConnection
-from urllib2 import urlparse
 import terms as v
 import time
 import json
 
-class HypermediaHttpRequest():
+class HypermediaHttpRequest(HypermediaRequest):
     
-    def __init__(self, url=None, requestMap={}):
-        
-        self._requestMap = self._initRequestMap()
-        for item in requestMap:
-            self._requestMap[item] = requestMap[item]
-
-        if url:
-            self._u = urlparse.urlparse(url)
-            self._host = self._u.hostname 
-            self._port = self._u.port
-
-            for self.pathElement in self._u.path.split("/") :
-                if 0 < len(self.pathElement)  :
-                    self._requestMap[v.uriPath].append(self.pathElement)
-
-            for self.queryElement in self._u.query.split("&") :
-                if 0 < self.queryElement.find("=") :
-                    (self.k, self.v) = self.queryElement.split("=")
-                    self._requestMap[v.uriQuery][self.k] = self.v
-                elif 0 < len(self.queryElement) : 
-                    self._requestMap[v.uriQuery][self.queryElement] = True
-
-    def _initRequestMap(self):
-        requestMap = \
-        {v.uriPath:["/"], v.uriQuery: {}, v.options: {}, v.contentFormat: v._null, v.method: v._null, v.payload: v._null}
-        requestMap[v.response] = \
-        {v.status:v._null, v.code:v._null, v.reason:v._null, v.contentFormat:v._null, v.payload:v._null}
-        return requestMap
-
     def send(self, responseHandler=None):
 
         self._method = self._requestMap[v.method]
@@ -189,11 +160,15 @@ def selfTest():
         print "response body: ", json.dumps(requestMap[v.response][v.payload])
     
     request = HypermediaHttpRequest( netloc + "/", { v.method:v.post, v.contentFormat:v.senmlCollectionType, \
-                  v.payload: {"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","v":"test"}]} } )
+                  v.payload: {"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","sv":"test"}]} } )
+    _markTime = time.clock()
     request.send()
     request.getResponse()
+    _currentTime = time.clock()
+    print "ms: %4.1f" % (1000 * (_currentTime - _markTime))
     print "Status: ", request._requestMap[v.response][v.status]
-    print "Options: ", request._requestMap[v.options]
+    if v.location in request._requestMap[v.options] :
+        print "Location: ", request._requestMap[v.options][v.location]
     
     while True:
         request = HypermediaHttpRequest(netloc + "/test", \
