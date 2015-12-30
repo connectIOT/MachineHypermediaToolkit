@@ -90,14 +90,15 @@ __version__ = "0.1"
 
 from httplib import HTTPConnection
 import terms as v
+import time
 
-class HypermediaHttpRequest():
+class HypermediaHttpRequester():
     
     def __init__(self, host, port):
         self._host = host
         self._port = port
     
-    def send(self, requestMap, host = None, port = None):
+    def send(self, requestMap, responseHandler=None, host=None, port=None):
         if host:
             self._host = host
         if port:
@@ -105,35 +106,41 @@ class HypermediaHttpRequest():
             
         self._requestMap = requestMap
         
-        self._method = requestMap[v.method]
+        self._method = self._requestMap[v.method]
         
         self._url = ""
-        for pathElement in requestMap[v.uriPath] :
+        for pathElement in self._requestMap[v.uriPath] :
             self._url += pathElement
 
-        if v.uriQuery in requestMap and 0 < len(requestMap[v.uriQuery]) :
+        if v.uriQuery in self._requestMap and 0 < len(self._requestMap[v.uriQuery]) :
             self._queryString = "?"
-            for queryElement in requestMap[v.uriQuery] :
-                self._queryString += ( "&" + queryElement + "=" + queryElement[self._requestMap[v.uriQuery][queryElement]] )
-            self._url += self._queryString
+            for queryElement in self._requestMap[v.uriQuery] :
+                self._queryString += (queryElement + "=" + self._requestMap[v.uriQuery][queryElement] + "&")
+            self._url += self._queryString[:-1]
                 
         self._payload = None    
-        if v.payload in requestMap:
-            self._payload = requestMap[v.payload]
+        if v.payload in self._requestMap:
+            self._payload = self._requestMap[v.payload]
         
-        requestMap[v.options] = {}
-        requestMap[v.options][v.contentFormat] = requestMap[v.contentFormat]
+        self._requestMap[v.options] = {}
+        self._requestMap[v.options][v.contentFormat] = self._requestMap[v.contentFormat]
         
         self._headers = {}
-        for option in requestMap[v.options]:
+        for option in self._requestMap[v.options]:
             if v.contentFormat == option:
-                self._headers["Content-Type"] = requestMap[v.options][v.contentFormat]
+                if v.get == self._requestMap[v.method] :
+                    self._headers["Accept"] = self._requestMap[v.options][v.contentFormat]
+                else:
+                    self._headers["Content-Type"] = self._requestMap[v.options][v.contentFormat]
             else:
-                self._headers[option] = requestMap[option]
+                self._headers[option] = self._requestMap[option]
         
         self._connection = HTTPConnection(self._host, self._port)
-        print "connection: ", self._host, self._port
         self._connection.request(self._method, self._url, self._payload, self._headers)
+
+        if responseHandler:
+            self.getResponse()
+            responseHandler(self._requestMap)
         
     def getResponse(self):
         self._response = self._connection.getresponse()
@@ -146,7 +153,7 @@ class HypermediaHttpRequest():
         self._requestMap[v.response][v.reason] = self._response.reason
         self._requestMap[v.response][v.status] = v.toStatus[self._response.status]
         self._requestMap[v.response][v.payload] = self._response.read()
-
+        self._connection.close()
 
 def selfTest():
     """
@@ -155,16 +162,20 @@ def selfTest():
     host = "localhost"
     port = 8000
     
-    requestMap = {v.uriPath:["/"], v.method:v.get, v.contentFormat:v.senmlType }
-    request = HypermediaHttpRequest(host,port)
-    request.send(requestMap)
-    request.getResponse()
-    print requestMap[v.response][v.payload]
+    def handleResponse(requestMap):
+        _currentTime = time.clock()
+        print "ms: %4.1f" % (1000* (_currentTime - _markTime))
+        print "response body: ", (requestMap[v.response][v.payload])
+    
+    while True:
+        requestMap = { v.method:v.get, v.uriPath:["/"], v.uriQuery: {v._href:"test", v._rel:v._sub}, v.contentFormat:v.plainTextType }
+        request = HypermediaHttpRequester(host,port)
+        _markTime = time.clock()
+        request.send(requestMap, handleResponse)
+        time.sleep(5)
 
 if __name__ == '__main__':
     selfTest()
-    
-    
-    
+
     
     
