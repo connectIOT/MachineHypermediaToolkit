@@ -154,8 +154,11 @@ class HypermediaHttpRequester():
         self._requestMap[v.response][v.code] = self._response.status
         self._requestMap[v.response][v.reason] = self._response.reason
         self._requestMap[v.response][v.status] = v.toStatus[self._response.status]
-        self._requestMap[v.response][v.payload] = self._response.read()
+        payloadString = self._response.read()
+        if 0 < len(payloadString):
+            self._requestMap[v.response][v.payload] = json.loads(payloadString)
         self._connection.close()
+
 
 def selfTest():
     """
@@ -166,8 +169,8 @@ def selfTest():
     
     def handleResponse(requestMap):
         _currentTime = time.clock()
-        print "ms: %4.1f" % (1000* (_currentTime - _markTime))
-        print "response body: ", (requestMap[v.response][v.payload])
+        print "ms: %4.1f" % (1000 * (_currentTime - _markTime))
+        print "response body: ", json.dumps(requestMap[v.response][v.payload])
         
     requestMap = { v.method:v.post, v.uriPath:["/"], v.contentFormat:v.senmlCollectionType, \
                   v.payload: {"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","v":"test"}]} }
@@ -175,10 +178,11 @@ def selfTest():
     request = HypermediaHttpRequester(host,port)
     request.send(requestMap)
     request.getResponse()
-    print "Status: ", requestMap[v.response][v.status], "Location", requestMap[v.options][v.location]
+    print "Status: ", requestMap[v.response][v.status]
+    print "Options: ", requestMap[v.options]
     
     while True:
-        requestMap = { v.method:v.get, v.uriPath:["/", "test"], v.contentFormat:v.senmlCollectionType }
+        requestMap = { v.method:v.get, v.uriPath:["/", "test"], v.contentFormat:v.senmlType }
         request = HypermediaHttpRequester(host,port)
         _markTime = time.clock()
         request.send(requestMap, handleResponse)
@@ -186,6 +190,3 @@ def selfTest():
 
 if __name__ == '__main__':
     selfTest()
-
-    
-    
