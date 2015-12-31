@@ -41,16 +41,17 @@ class SenmlCollectionHandler(ContentHandler):
                     
             """ make links and resources """
             for self._link in self._senml.getLinks():
+                # if the link exists, patch it
                 if [] != self._resource._linkArray.get({v._href:self._link[v._href]}) :
-                    request[v.response][v.status] = v.Conflict
-                    return  
-                self._resource._linkArray.add(self._link)
+                    self._resource._linkArray.selectMerge({v._href:self._link[v._href]}, self._link)
                 # if the link relation has an item value, make an item from the named senml element 
-                if [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._item}):
+                elif [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._item}):
+                    self._resource._linkArray.add(self._link)
                     self._resource._itemArray.add(self._senml._items.getItemByName(self._link[v._href]))
                     self._location = self._link[v._href]
                 # if the link relation has a sub resource value, make a sub resource with optional element
                 elif [] != self._senml.getLinks({v._href: self._link[v._href], v._rel: v._sub}):
+                    self._resource._linkArray.add(self._link)
                     self._newResource = self._resource._createSubresource \
                         ( self._link[v._href], self._senml._items.getItemByName(self._link[v._href]) )
                     self._location = self._link[v._href]
