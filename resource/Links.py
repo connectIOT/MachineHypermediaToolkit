@@ -44,7 +44,7 @@ class Links(object) :
                             if isinstance(self._links[self._index][attribute], list):
                                 if isinstance(mergeMap[attribute], list) :
                                     # adding a list to a list, factor out duplicates
-                                    self._links[self._index][attribute].append( \
+                                    self._links[self._index][attribute].extend( \
                                     [ attr for attr in mergeMap[attribute] \
                                     if attr not in self._links[self._index][attribute] ] )
                                 elif mergeMap[attribute] not in self._links[self._index][attribute] :

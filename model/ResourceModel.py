@@ -109,7 +109,7 @@ class Server():
 
 def selfTest():
     jsonString = \
-        """[ {"bn": "/", "e": [], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
+        """[ {"bn": "/", "e": [{"n":"test","sv":"testValue"}], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
     serverAddress = \
         "http://localhost:8000"
     model = ResourceModel(jsonString, serverAddress)
