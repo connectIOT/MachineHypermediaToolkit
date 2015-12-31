@@ -48,6 +48,7 @@ class SenmlHandler(ContentHandler):
                     else:
                         """ if there is any error, reuturn with the error status in the response """
                         return
+
                 request[v.response][v.payload] = self._senml.serialize()                    
                 request[v.response][v.status] = v.Success
                 
@@ -106,7 +107,8 @@ class Senml():
         self.__init__(items, self._baseName)
         
     def addItems(self, items):
-        self._items.add(items)
+        if [] != items:
+            self._items.add(items)
         
     def serialize(self):
         return json.dumps(self._senml)

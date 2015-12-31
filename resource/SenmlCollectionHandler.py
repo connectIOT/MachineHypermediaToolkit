@@ -24,8 +24,8 @@ class SenmlCollectionHandler(ContentHandler):
             """ get items in local context and add to the result """
             for self._link in self._senml._links.get({v._rel:v._item}) :
                 self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
-                    
-            request[v.response][v.payload] = self._senml.serialize()                    
+            
+            request[v.response][v.payload] = self._senml.serialize()
             request[v.response][v.status] = v.Success
             
         elif v.post == request[v.method]:
@@ -41,7 +41,7 @@ class SenmlCollectionHandler(ContentHandler):
                     
             """ make links and resources """
             for self._link in self._senml.getLinks():
-                # if the link exists, patch it
+                # if the link exists, patch it and don't create any new resources
                 if [] != self._resource._linkArray.get({v._href:self._link[v._href]}) :
                     self._resource._linkArray.selectMerge({v._href:self._link[v._href]}, self._link)
                 # if the link relation has an item value, make an item from the named senml element 
