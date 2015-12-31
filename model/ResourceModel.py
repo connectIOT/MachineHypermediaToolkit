@@ -72,6 +72,7 @@ class Server():
         self._server = server
         
     def createResourceNode(self, node):
+        # this is a bit inelegant because it's not using a hypermedia form t
         self._uriPath = self._server + node.getModel()[v._bn]
         self._request = HypermediaHttpRequest(self._uriPath, \
                 {v.method:v.post, v.contentFormat:v.senmlCollectionType, v.payload:node.getModel() })
@@ -87,7 +88,7 @@ class Server():
  
 def selfTest():
     jsonString = \
-        """[ {"bn": "/", "e": [], "l": [ {"href": "test", "rel": "sub"}]} ]"""
+        """[ {"bn": "/", "e": [], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
     serverAddress = \
         "http://localhost:8000"
     model = ResourceModel(jsonString, serverAddress)
