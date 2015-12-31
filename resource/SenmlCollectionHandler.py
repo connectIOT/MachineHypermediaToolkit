@@ -66,7 +66,7 @@ class SenmlCollectionHandler(ContentHandler):
         
                 
 from Links import Links
-         
+
 class SenmlCollection(Senml):
     
     def __init__(self, links=None, items=None, baseName=None):
