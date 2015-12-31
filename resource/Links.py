@@ -30,6 +30,7 @@ class Links(object) :
         if len(self._linkList) == 0:
             self.add(mergeMap)
         else:
+            # reverse the list so multiple deletions don't change the index of earlier elements
             self._linkList.reverse()
             for self._index in self._linkList :
                 if mergeMap == {} :
@@ -39,10 +40,28 @@ class Links(object) :
                         if mergeMap[attribute] == None: 
                             del self._links[self._index][attribute]
                         else:
+                            # merge attributes between lists and string values
                             if isinstance(self._links[self._index][attribute], list):
-                                self._links[self._index][attribute].append(mergeMap[attribute])
+                                if isinstance(mergeMap[attribute], list) :
+                                    # adding a list to a list, factor out duplicates
+                                    self._links[self._index][attribute].append( \
+                                    [ attr for attr in mergeMap[attribute] \
+                                    if attr not in self._links[self._index][attribute] ] )
+                                elif mergeMap[attribute] not in self._links[self._index][attribute] :
+                                    self._links[self._index][attribute].append(mergeMap[attribute])
                             else:
-                                self._links[self._index][attribute] = mergeMap[attribute]
+                                if isinstance(mergeMap[attribute], list) :
+                                    # adding a list to a string results in a list
+                                    if self._links[self._index][attribute] in mergeMap[attribute] :
+                                        self._links[self._index][attribute] = mergeMap[attribute]
+                                    else:
+                                        self._links[self._index][attribute] = \
+                                        [self._links[self._index][attribute]].extend(mergeMap[attribute])
+                                else:
+                                    # adding a string to a string results in a list
+                                    if mergeMap[attribute] != self._links[self._index][attribute]:
+                                        self._links[self._index][attribute] = \
+                                        [self._links[self._index][attribute], mergeMap[attribute]]
        
     def select(self, selectMap) :
         """selectMap contains a selection map in query filter format"""

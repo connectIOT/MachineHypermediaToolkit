@@ -112,7 +112,7 @@ class HypermediaHttpRequest(HypermediaRequest):
                 
         self._payload = None    
         if v._null != self._requestMap[v.payload] :
-            self._payload = json.dumps(self._requestMap[v.payload])
+            self._payload = self._requestMap[v.payload]
         
         self._requestMap[v.options][v.contentFormat] = self._requestMap[v.contentFormat]
         
@@ -146,7 +146,7 @@ class HypermediaHttpRequest(HypermediaRequest):
         self._requestMap[v.response][v.contentFormat] = [self._requestMap[v.options]["contentFormat"]]
         payloadString = self._response.read()
         if 0 < len(payloadString):
-            self._requestMap[v.response][v.payload] = json.loads(payloadString)
+            self._requestMap[v.response][v.payload] = payloadString
         self._connection.close()
 
 def selfTest():
@@ -157,10 +157,11 @@ def selfTest():
     def handleResponse(requestMap):
         _currentTime = time.clock()
         print "ms: %4.1f" % (1000 * (_currentTime - _markTime))
-        print "response body: ", json.dumps(requestMap[v.response][v.payload])
+        print "response body: ", requestMap[v.response][v.payload]
+        
+    jsonString = json.dumps({"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","sv":"test"}]}) 
     
-    request = HypermediaHttpRequest( netloc + "/", { v.method:v.post, v.contentFormat:v.senmlCollectionType, \
-                  v.payload: {"l":[{"href":"test", "rel":"sub"}],"e":[{"n":"test","sv":"test"}]} } )
+    request = HypermediaHttpRequest( netloc + "/", { v.method:v.post, v.contentFormat:v.senmlCollectionType, v.payload: jsonString} )
     _markTime = time.clock()
     request.send()
     request.getResponse()
@@ -171,8 +172,8 @@ def selfTest():
         print "Location: ", request._requestMap[v.options][v.location]
     
     while True:
-        request = HypermediaHttpRequest(netloc + "/test", \
-                { v.method: v.get, v.contentFormat: v.senmlType } )
+        request = HypermediaHttpRequest(netloc + "/", \
+                { v.method: v.get, v.contentFormat: v.senmlCollectionType } )
         _markTime = time.clock()
         request.send(handleResponse)
         time.sleep(5)
