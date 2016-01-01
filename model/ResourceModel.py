@@ -17,7 +17,7 @@ import json
 import terms as v
 
 class ResourceModel():
-    def __init__(self, model=None, serverAddress=None):
+    def __init__(self, serverAddress=None, model=None):
         self._resourceNodeArray = []
         if model:
             self.load(model)   
@@ -37,6 +37,7 @@ class ResourceModel():
                 self.addNodes(ResourceNode(nodeMap))
         elif isinstance(self._loadObject, dict):
             self.addNodes(ResourceNode(nodeMap))
+        return self
             
     def createOnServer(self):
         for node in self._resourceNodeArray:
@@ -52,8 +53,8 @@ class ResourceModel():
         else:
             self._resourceNodeArray.append(nodes)
     
-    def removeNode(self, path, selectMap):
-        """ remove the selected node and all subresource nodes """
+    def removeNodes(self, path, selectMap):
+        """ remove the selected nodes and all subresource nodes """
         pass
     
 class ResourceNode():
@@ -69,6 +70,7 @@ class ResourceNode():
     
     def load(self, jsonString):
         self._resource.load(jsonString)
+        return self
         
     def getModel(self):
         return self._resource._senml
@@ -114,11 +116,9 @@ def selfTest():
         """[ {"bn": "/", "e": [{"n":"test","sv":"testValue"}], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
     serverAddress = \
         "http://localhost:8000"
-    model = ResourceModel(jsonString, serverAddress)
-    model.createOnServer()
+    ResourceModel(serverAddress).load(jsonString).createOnServer()
     print "created on server"
-    model.__init__()
-    print "model from server: ", model.loadFromServer().serialize()
+    print "model from server: ", ResourceModel(serverAddress).loadFromServer().serialize()
     
 if __name__ == "__main__" :
     selfTest()
