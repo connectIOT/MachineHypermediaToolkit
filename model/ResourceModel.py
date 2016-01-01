@@ -23,6 +23,8 @@ class ResourceModel():
             self.load(model)   
         if serverAddress:
             self._server = Server(serverAddress)
+        else:
+            self._server = Server()
         
     def serialize(self):
         self._result = []
@@ -39,11 +41,15 @@ class ResourceModel():
             self.addNodes(ResourceNode(nodeMap))
         return self
             
-    def createOnServer(self):
+    def createOnServer(self, serverAddress=None):
+        if serverAddress:
+            self._server._server = serverAddress
         for node in self._resourceNodeArray:
             self._server.createResourceNode(node)
     
-    def loadFromServer(self):
+    def loadFromServer(self, serverAddress=None):
+        if serverAddress:
+            self._server._server = serverAddress
         self._server.getResources("/", self._resourceNodeArray)
         return self
     
@@ -76,8 +82,9 @@ class ResourceNode():
         return self._resource._senml
 
 class Server():
-    def __init__(self, server):
-        self._server = server
+    def __init__(self, server=None):
+        if server:
+            self._server = server
         
     def createResourceNode(self, node):
         # this is a bit inelegant because it's not using a hypermedia form
@@ -116,9 +123,9 @@ def selfTest():
         """[ {"bn": "/", "e": [{"n":"test","sv":"testValue"}], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
     serverAddress = \
         "http://localhost:8000"
-    ResourceModel(serverAddress).load(jsonString).createOnServer()
+    ResourceModel().load(jsonString).createOnServer(serverAddress)
     print "created on server"
-    print "model from server: ", ResourceModel(serverAddress).loadFromServer().serialize()
+    print "model from server: ", ResourceModel().loadFromServer(serverAddress).serialize()
     
 if __name__ == "__main__" :
     selfTest()
