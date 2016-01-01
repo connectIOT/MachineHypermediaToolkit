@@ -46,6 +46,7 @@ class ResourceModel():
             self._server._server = serverAddress
         for node in self._resourceNodeArray:
             self._server.createResourceNode(node)
+        return self
     
     def loadFromServer(self, serverAddress=None):
         if serverAddress:
@@ -89,20 +90,20 @@ class Server():
     def createResourceNode(self, node):
         # this is a bit inelegant because it's not using a hypermedia form
         self._url = self._server + node.getModel()[v._bn]
-        print "createResourceNode: ", node._resource.serialize()
+        #print "payload: ", node._resource.serialize()
         self._request = HypermediaHttpRequest(self._url, \
                 {v.method: v.post, v.contentFormat: v.senmlCollectionType, v.payload: node._resource.serialize() })
         self._request.send()
         self._request.getResponse()
-        print "Status: ", self._request._requestMap[v.response][v.status]
-        if v.location in self._request._requestMap[v.options] :
-            print "Location: ", self._request._requestMap[v.options][v.location]
+        # print "Status: ", self._request._requestMap[v.response][v.status],
+        # if v.location in self._request._requestMap[v.options] :
+            # print "Location: ", self._request._requestMap[v.options][v.location],
         
     def getResources(self, uriPath, resourceArray):
         self._getResourceRecursive(uriPath, resourceArray)
     
     def _getResourceRecursive(self, uriPath, resourceArray):
-        print "subresource link: ", uriPath
+        #print "subresource link: ", uriPath
         resourceNode = self._getResource(uriPath)
         resourceArray.append(resourceNode)
         for link in resourceNode._links.get({v._rel:v._sub}) :
@@ -114,7 +115,7 @@ class Server():
                 {v.method:v.get, v.contentFormat:v.senmlCollectionType })
         self._request.send()
         self._request.getResponse()
-        print "payload: ", self._request._requestMap[v.response][v.payload]
+        #print "payload: ", self._request._requestMap[v.response][v.payload]
         return ResourceNode( json.loads(self._request._requestMap[v.response][v.payload] ) )
 
 
@@ -123,8 +124,7 @@ def selfTest():
         """[ {"bn": "/", "e": [{"n":"test","sv":"testValue"}], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
     serverAddress = \
         "http://localhost:8000"
-    ResourceModel().load(jsonString).createOnServer(serverAddress)
-    print "created on server"
+    print "creating on server: ", ResourceModel().load(jsonString).createOnServer(serverAddress).serialize()
     print "model from server: ", ResourceModel().loadFromServer(serverAddress).serialize()
     
 if __name__ == "__main__" :
