@@ -44,6 +44,7 @@ class ResourceModel():
     
     def loadFromServer(self):
         self._server.getResources("/", self._resourceNodeArray)
+        return self
     
     def addNodes(self, nodes):
         if isinstance(nodes,list) :
@@ -117,8 +118,7 @@ def selfTest():
     model.createOnServer()
     print "created on server"
     model.__init__()
-    model.loadFromServer()
-    print "model from server: ", model.serialize()
+    print "model from server: ", model.loadFromServer().serialize()
     
 if __name__ == "__main__" :
     selfTest()
