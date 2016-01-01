@@ -92,6 +92,7 @@ class Server():
         self._getResourceRecursive(uriPath, resourceArray)
     
     def _getResourceRecursive(self, uriPath, resourceArray):
+        print "subresource link: ", uriPath
         resourceNode = self._getResource(uriPath)
         resourceArray.append(resourceNode)
         for link in resourceNode._links.get({v._rel:v._sub}) :
