@@ -77,6 +77,8 @@ _rel = "rel"
 _self = "self"
 _sub = "sub"
 _grp ="grp"
+_boundTo = "boundTo"
+_handledBy ="handledBy"
 _item = "item"
 _rt = "rt"
 _ct = "ct"
@@ -95,13 +97,14 @@ _bv = "bv" #boolean value
 _sv = "sv" #string value
 _ov = "ov" #object value
 _ev = "ev" #element value
+_fv = "fv" #form value
 
-plainTextType = "text/plain"
-linkFormatJsonType = "application/link-format+json"
-senmlType = "application/senml+json"
-senmlCollectionType = "application/collection+senml+json"
-linkFormatMergeType = "application/merge-patch+json"
-senmlFormType = "application/forms+senml+json"
+""" terms to be used in forms """
+_action = "action"
+_method = "method"
+_params = "params"
+_template = "template"
+_returns = "returns"
 
 """Interaction model terms used in resource type (rt) attribute values"""
 _index = "index"
@@ -113,3 +116,18 @@ _property = "property"
 _actuation = "actuation"
 _subscription = "subscription"
 _notification = "notification"
+
+""" content-formats """
+plainTextType = "text/plain"
+linkFormatJsonType = "application/link-format+json"
+linkFormatType = linkFormatJsonType
+senmlJsonType = "application/senml+json"
+senmlType = senmlJsonType
+senmlCollectionType = "application/collection+senml+json"
+linkFormatMergeType = "application/merge-patch+json"
+senmlFormType = "application/forms+senml+json"
+""" hyper-senml and extensions """
+hsmlType = "application/hsml+json"
+hsmlLinkType = "application/link-format+hsml+json"
+hsmlCollectionType = "application/collection+hsml+json"
+hsmlFormsType = "application/forms+hsml+json"

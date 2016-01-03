@@ -15,7 +15,7 @@ class SenmlCollectionHandler(ContentHandler):
             """ return a representation of a collection+senml instance with links and items
                 first process the query and load the list of matching links into the senml 
                 object; if the query is empty, all links are returned """
-            self._senml.init( self._resource._linkArray.get(request[v.uriQuery]), baseName=self._resource._pathString )
+            self._senml.configure( self._resource._linkArray.get(request[v.uriQuery]), baseName=self._resource._pathString )
             if [] == self._senml.getLinks() :
                 request[v.response][v.status] = v.NotFound
                 return
@@ -32,7 +32,7 @@ class SenmlCollectionHandler(ContentHandler):
             """ create new links and items in the collection. Takes a collection+senml document with optional
                 links and items. If the links element is elided, default links are constructed """
             self._location = None
-            self._senml.init()
+            self._senml.configure()
             self._senml.load(request[v.payload])
             for item in self._senml.items():
                 """make a default item link if no link was provided for this item"""
@@ -75,7 +75,7 @@ class SenmlCollection(Senml):
         self._links = Links(links)
         self._senml[v._l] = self._links._links
         
-    def init(self, items=None, links=None, baseName=None):
+    def configure(self, items=None, links=None, baseName=None):
         self.__init__(items, links, baseName)
                 
     def addLinks(self, links):        

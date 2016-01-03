@@ -10,7 +10,7 @@ found in the "rt" link attribute
 from ResourceModel import ResourceModel, ResourceNode
 import terms as v
 import json
-import WoTInteractionModel as im
+import InteractionModel as im
 
 class ThingObjectModel(ResourceModel):
     

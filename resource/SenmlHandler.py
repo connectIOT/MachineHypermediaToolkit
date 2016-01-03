@@ -28,7 +28,7 @@ class SenmlHandler(ContentHandler):
             
             if v.get == request[v.method]:
                 """ get returns items associated with selected links as a senml multi-resource instance"""
-                self._senml.init()
+                self._senml.configure()
                 for self._link in self._selectedLinks.get({v._rel:v._item}) :
                     """ get items in local context and add to the result """
                     self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
@@ -77,7 +77,7 @@ class SenmlHandler(ContentHandler):
         elif 1 == self._resource._unrouted :
             """ Select and process item """
             if v.get == request[v.method]:
-                self._senml.init()
+                self._senml.configure()
                 self._senml.addItems(self._resource._itemArray.getItemByName(self._resource._resourceName))                 
                 request[v.response][v.payload] = self._senml.serialize()
                 request[v.response][v.status] = v.Success
@@ -104,7 +104,7 @@ class Senml():
             self._baseName = baseName
             self._senml[v._bn] = baseName
         
-    def init(self, items=None):
+    def configure(self, items=None):
         self.__init__(items, self._baseName)
         
     def addItems(self, items):
