@@ -16,7 +16,7 @@ from Items import SenmlItems
 import json
 import terms as v
 
-class ResourceModel():
+class ResourceModel:
     def __init__(self, serverAddress=None, model=None):
         self._nodeArray = []
         if model:
@@ -64,7 +64,7 @@ class ResourceModel():
         """ remove the selected nodes and all subresource nodes """
         pass
     
-class ResourceNode():
+class ResourceNode:
     def __init__(self, nodeMap):
         
         self._links = Links(nodeMap[v._l])
@@ -84,7 +84,7 @@ class ResourceNode():
     def getModel(self):
         return self._resource._senml
 
-class Server():
+class Server:
     def __init__(self, server=None):
         if server:
             self._server = server

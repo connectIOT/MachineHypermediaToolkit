@@ -101,7 +101,7 @@ linkFormatJsonType = "application/link-format+json"
 senmlType = "application/senml+json"
 senmlCollectionType = "application/collection+senml+json"
 linkFormatMergeType = "application/merge-patch+json"
-linkFormatFormType = "application/forms+link-format+json"
+senmlFormType = "application/forms+senml+json"
 
 """Interaction model terms used in resource type (rt) attribute values"""
 _index = "index"

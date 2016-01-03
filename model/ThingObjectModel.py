@@ -28,33 +28,35 @@ class TOMnode(ResourceNode):
         
     def __init__(self, nodeMap):
         ResourceNode.__init__(self, nodeMap)
-        
-        self._imClass = {
-            v._index: im.Index,
-            v._thing: im.Thing,
-            v._capability: im.Capability,
-            v._action: im.Action,
-            v._event: im.Event,
-            v._property: im.Property,
-            v._actuation: im.Actuation,
-            v._subscription: im.Subscription,
-            v._notification: im.Notification
-            }
-        
+                
         """ if there is a resource type matching one of the WoT Model classes or supporting classes, make 
             an instance of the support class which will add class-specific API methods and properties to the node
         """
-        for linkAttr in self._imClass:
+        for linkAttr in im.rtToClass:
             if [] != self._links.get({v._rel: v._self, v._rt: linkAttr}) :
-                self.im = self._imClass[linkAttr](self)
+                im.rtToClass[linkAttr](self)
 
 
 def selfTest():
     
-    nodeMap = json.loads("""{ "bn": "/", "e": [{"n":"", "sv":"hello world"}], "l": [{"href": "", "rel": ["self", "item"], "rt": ["property", "greeting"]} ] }""")
+    jsonString = """{ 
+                    "bn": 
+                        "/", 
+                    "l": [ 
+                        {"href": "", 
+                        "rel": ["self", "item"], 
+                        "rt": ["property", "greeting"]} 
+                        ],
+                    "e": [ 
+                        {"n":"", 
+                        "sv":"hello world"} 
+                        ]
+                    }"""
+    nodeMap = json.loads(jsonString)
     testNode = TOMnode(nodeMap)
+    """ the interface fo rthe property resource type has get and set methods """
     print testNode.get()
-    testNode.set("goodbye")
+    testNode.set("hola mundo")
     print testNode.get()
     
 if __name__ == "__main__" :

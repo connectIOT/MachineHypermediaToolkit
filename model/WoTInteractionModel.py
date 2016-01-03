@@ -1,13 +1,15 @@
+import terms as v
 
-class InteractionModel():
+class InteractionModel:
     
     def __init__(self, node):
         self._node = node
         self.init()
-    
-    def init(self):
         self._node.ser = self.ser
-        
+
+    def init(self):
+        pass
+    
     def ser(self):
         return self._node.serialize()
 
@@ -46,3 +48,17 @@ class Subscription(InteractionModel):
 
 class Notification(InteractionModel):
     pass
+
+""" mapping of the resource types to classes in the interaction model """
+rtToClass = {
+            v._index: Index,
+            v._thing: Thing,
+            v._capability: Capability,
+            v._action: Action,
+            v._event: Event,
+            v._property: Property,
+            v._actuation: Actuation,
+            v._subscription: Subscription,
+            v._notification: Notification
+            }
+
