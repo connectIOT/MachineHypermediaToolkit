@@ -18,7 +18,7 @@ import terms as v
 
 class ResourceModel():
     def __init__(self, serverAddress=None, model=None):
-        self._resourceNodeArray = []
+        self._nodeArray = []
         if model:
             self.load(model)   
         if serverAddress:
@@ -28,7 +28,7 @@ class ResourceModel():
         
     def serialize(self):
         self._result = []
-        for node in self._resourceNodeArray :
+        for node in self._nodeArray :
             self._result.append(node.getModel())
         return json.dumps(self._result)
     
@@ -44,21 +44,21 @@ class ResourceModel():
     def createOnServer(self, serverAddress=None):
         if serverAddress:
             self._server._server = serverAddress
-        for node in self._resourceNodeArray:
+        for node in self._nodeArray:
             self._server.createResourceNode(node)
         return self
     
     def loadFromServer(self, serverAddress=None):
         if serverAddress:
             self._server._server = serverAddress
-        self._server.getResources("/", self._resourceNodeArray)
+        self._server.getResources("/", self._nodeArray)
         return self
     
     def addNodes(self, nodes):
         if isinstance(nodes,list) :
-            self._resourceNodeArray.extend(nodes)
+            self._nodeArray.extend(nodes)
         else:
-            self._resourceNodeArray.append(nodes)
+            self._nodeArray.append(nodes)
     
     def removeNodes(self, path, selectMap):
         """ remove the selected nodes and all subresource nodes """
@@ -71,6 +71,8 @@ class ResourceNode():
         self._items = SenmlItems(nodeMap[v._e])
         self._baseName = nodeMap[v._bn]
         self._resource = SenmlCollection(self._links.get(), self._items._items, self._baseName)
+
+
 
     def serialize(self):
         return self._resource.serialize()
@@ -120,10 +122,24 @@ class Server():
 
 
 def selfTest():
-    jsonString = \
-        """[ {"bn": "/", "e": [{"n":"test","sv":"testValue"}], "l": [{"href": "", "rel": ["self"]}, {"href": "test", "rel": "sub"}]} ]"""
-    serverAddress = \
-        "http://localhost:8000"
+    jsonString = """
+                    [ {
+                    "bn": "/", 
+                    "l": [
+                        {"href": "", 
+                        "rel": ["self"]}, 
+                        {"href": "test", 
+                        "rel": "sub"}
+                        ],
+                    "e": [
+                        {"n":"test",
+                        "sv":"testValue"}
+                        ]
+                    } ]
+                """
+                    
+    serverAddress = "http://localhost:8000"
+    
     print "creating on server: ", ResourceModel().load(jsonString).createOnServer(serverAddress).serialize()
     print "model from server: ", ResourceModel().loadFromServer(serverAddress).serialize()
     
