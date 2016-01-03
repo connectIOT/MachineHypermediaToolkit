@@ -1,4 +1,4 @@
-
+""" CCML Commom CRUD Interface mapping """
 """terms for methods"""
 get = "GET"
 put = "PUT"
