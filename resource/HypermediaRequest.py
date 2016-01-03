@@ -1,5 +1,5 @@
 """
-HypermediaRequest is the base class for a dictionary driven interface
+HypermediaRequest is the base class for the Common CRUD CCML client, a dictionary driven interface
 to http and CoAP requesters and response handlers to be used by clients and server request processors
 
 Requests and their associated responses are exposed in a dictionary interface for processing by proxies and resources
