@@ -1,6 +1,6 @@
 import terms as v
 
-W3Cmodel =      [
+W3Cschema =      [
                  {v._className: "WoTinteractionModel",
                   v._subClassOf: "InteractionModel",
                   v._domain: ["W3C_WoT_IG"],
@@ -54,7 +54,7 @@ W3Cmodel =      [
                   },
                  {v._className: v._actuation,
                   v._subClassOf: "WoTinteractionModel",
-                  v._domain: [v._capability],
+                  v._domain: [v._action],
                   v._range: [v._notification, v._params],
                   v._description: """Actuation class"""
                   },
