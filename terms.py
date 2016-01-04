@@ -69,8 +69,8 @@ toStatus = {
           415: UnsupportedType,
           500: ServerError
           }
-
-"""terms in link-format representations"""
+""" Hypermedia Semantic layer definitions """
+""" terms in link-format representations """
 _href = "href"
 _anchor = "anchor"
 _rel = "rel"
@@ -86,7 +86,7 @@ _if = "if"
 _sz = "sz"
 _null = ""
 
-"""terms in senml and extensions"""
+""" terms in senml or hsml and extensions """
 _e = "e" #entities
 _l = "l" #links
 _bn = "bn" #base name (base uri)
@@ -126,8 +126,18 @@ senmlType = senmlJsonType
 senmlCollectionType = "application/collection+senml+json"
 linkFormatMergeType = "application/merge-patch+json"
 senmlFormType = "application/forms+senml+json"
-""" hyper-senml and extensions """
+
+""" hyper-senml content formats and extensions """
 hsmlType = "application/hsml+json"
 hsmlLinkType = "application/link-format+hsml+json"
 hsmlCollectionType = "application/collection+hsml+json"
 hsmlFormsType = "application/forms+hsml+json"
+
+""" Terms for schemas and models """
+_className = "ClassName"
+_subClassOf = "subClassOf"
+_range = "range"
+_domain = "domain"
+_description = "description"
+
+_value = "value"
