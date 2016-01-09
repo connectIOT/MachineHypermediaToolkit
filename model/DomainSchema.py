@@ -68,62 +68,63 @@ _stepSize = "stepSize"
 _remainingTime = "remainingTime"
 
 
-light = [
+light = { 
+    v._schema: [
         {
-        v._className: _light,
+        v._class: _light,
         v._subClassOf: v._capability,
-        v._domain: [v._thing, v._capability],
-        v._range: [ _onOff, _brightness, _color],
+        v._usedBy: [v._thing, v._capability],
+        v._uses: [ _onOff, _brightness, _color],
         v._description: """ base capability for lighting control """
         },
         {
-        v._className: _onOff,
+        v._class: _onOff,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentState, _targetState, _change, _propertyValueChange],
+        v._usedBy: [_light],
+        v._uses: [_currentState, _targetState, _change, _propertyValueChange],
         v._description: """ on/off control """
         },
         {
-        v._className: _brightness,
+        v._class: _brightness,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentBrightness, _targetBrightness, 
+        v._usedBy: [_light],
+        v._uses: [_currentBrightness, _targetBrightness, 
                    _change, _step, _move, _stop, 
                    _propertyValueChange],
         v._description: """ level control """
         },
         {
-        v._className: _color,
+        v._class: _color,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._usedBy: [_light],
+        v._uses: [_colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._description: """ color control """
         },
         {
-        v._className: _colorHS,
+        v._class: _colorHS,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentHue, _currentSaturation, _targetHue, _targetSaturation, 
+        v._usedBy: [_light],
+        v._uses: [_currentHue, _currentSaturation, _targetHue, _targetSaturation, 
                    _transitionTime, _remainingTime,
                    _change, _step, _move, _stop,
                    _propertyValueChange],
         v._description: """ HS color control """
         },
         {
-        v._className: _colorXY,
+        v._class: _colorXY,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentX, _currentY, _targetX, _targetY, 
+        v._usedBy: [_light],
+        v._uses: [_currentX, _currentY, _targetX, _targetY, 
                    _transitionTime, _remainingTime,
                    _change, _step, _move, _stop,
                    _propertyValueChange],
         v._description: """ XY (CIE) Color control """
         },
         {
-        v._className: _colorRGB,
+        v._class: _colorRGB,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentRed, _currentGreen, _currentBlue, 
+        v._usedBy: [_light],
+        v._uses: [_currentRed, _currentGreen, _currentBlue, 
                    _targetRed, _targetGreen, _targetBlue, 
                    _transitionTime, _remainingTime,
                    _change, _step, _move, _stop,
@@ -131,62 +132,63 @@ light = [
         v._description: """ RGB Color Control """
         },
         {
-        v._className: _colorTemperature,
+        v._class: _colorTemperature,
         v._subClassOf: v._capability,
-        v._domain: [_light],
-        v._range: [_currentTemperature, _targetTemperature, 
+        v._usedBy: [_light],
+        v._uses: [_currentTemperature, _targetTemperature, 
                    _transitionTime, _remainingTime,
                    _change, _step, _move, _stop, 
                    _propertyValueChange],
         v._description: """ color Temperature control """
         },
         {
-        v._className: _change,
+        v._class: _change,
         v._subClassOf: v._action,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [_targetValue, _transitionTime],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [_targetValue, _transitionTime],
         v._description: """ change action """
         },
         {
-        v._className: _move,
+        v._class: _move,
         v._subClassOf: v._action,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [_moveRate],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [_moveRate],
         v._description: """ move action """
         },
         {
-        v._className: _step,
+        v._class: _step,
         v._subClassOf: v._action,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [_stepSize, _transitionTime],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [_stepSize, _transitionTime],
         v._description: """ step action """
         },
         {
-        v._className: _stop,
+        v._class: _stop,
         v._subClassOf: v._action,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [],
         v._description: """ stop action """
         },
         {
-        v._className: _propertyValueChange,
+        v._class: _propertyValueChange,
         v._subClassOf: v._event,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [v._params],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [v._params],
         v._description: """ event for changes in the value of a property """
         },
         {
-        v._className: _actionInvoked,
+        v._class: _actionInvoked,
         v._subClassOf: v._event,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [v._params],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [v._params],
         v._description: """ event for changes in the value of a property """
         },
         {
-        v._className: _actionCompleted,
+        v._class: _actionCompleted,
         v._subClassOf: v._event,
-        v._domain: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
-        v._range: [v._params],
+        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._uses: [v._params],
         v._description: """ event for changes in the value of a property """
         },
     ]
+}
