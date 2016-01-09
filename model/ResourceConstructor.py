@@ -15,6 +15,7 @@ resource instances on the server, and used in the client to bind Interaction Mod
 classes to resource nodes in the TOM
 
 """
+from ResourceModel import ResourceModel, ResourceNode
 
 class ResourceModelConstructor:
     pass
