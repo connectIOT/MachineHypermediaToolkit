@@ -1,8 +1,22 @@
 import terms as v
 import json
 
+BaseContext = """
+  {
+        "type": "@type",
+        "id": "@id",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfa": "http://www.w3.org/ns/rdfa#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xml": "http://www.w3.org/XML/1998/namespace",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "prov": "http://www.w3.org/ns/prov#",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "describedby": "http://www.w3.org/2007/05/powder-s#describedby"
+    }
+"""
 
-BaseContext = { 
+BaseSchema = { 
     v._schema: [
         { v._rdfProperty: v._mayHave,
          v._range : v._rdfClass,
@@ -14,12 +28,17 @@ BaseContext = {
          v._domain: v._rdfClass,
         v._description: """ a class that may have or links to an instance of this class """,
         },
+        { v._rdfProperty: v._params,
+         v._range : v._property,
+         v._domain: [v._event, v._action, v._subscription, v._actuation, v._notification],
+        v._description: """ a class that may have or links to an instance of this class """,
+        },
     ]
 }
 
 
 W3Cschema = { 
-    v._context: "http://schema.org",
+    v._context: json.loads(BaseContext),
     v._label: "W3Cschema",
     v._rdfResource: [
         {v._rdfClass: "WoTinteractionModel",
@@ -81,8 +100,8 @@ W3Cschema = {
         },
         {v._rdfClass: v._notification,
         v._subClassOf: "WoTinteractionModel",
-        v._usedBy: [v._subscription, v._actuation, v._params],
-        v._mayHave: [],
+        v._usedBy: [v._subscription, v._actuation],
+        v._mayHave: [v._params],
         v._description: """Notification class"""
         }
     ]
