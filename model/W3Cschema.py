@@ -20,7 +20,8 @@ BaseContext = {
 
 W3Cschema = { 
     v._context: "http://schema.org",
-    v._schema: [
+    v._label: "W3Cschema",
+    v._rdfResource: [
         {v._rdfClass: "WoTinteractionModel",
         v._subClassOf: "InteractionModel",
         v._usedBy: ["W3C_WoT_IG"],
