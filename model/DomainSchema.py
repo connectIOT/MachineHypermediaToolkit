@@ -250,7 +250,7 @@ light = {
 }
 
 def serialize():
-    return json.dumps(light)
+    return json.dumps(light, sort_keys=True, indent=4, separators=(',', ': '))
 
 if __name__ == "__main__" :
     print serialize()

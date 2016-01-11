@@ -40,8 +40,8 @@ class SchemaNode:
         return json.dumps(self._nodeMap)
     
 def selfTest():
-    from W3Cschema import W3Cschema
-    print Schema(W3Cschema).serialize()
+    from WoTschema import WoTschema
+    print Schema(WoTschema).serialize()
         
 if __name__ == "__main__" :
     selfTest()
