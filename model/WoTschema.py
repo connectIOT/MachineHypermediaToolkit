@@ -23,18 +23,18 @@ BaseSchema = {
 }
 
 
-W3Cschema = { 
+WoTschema = { 
     v._context: "http://thingschema.org",
-    v._label: "W3Cschema",
+    v._label: "WoTschema",
     v._rdfResource: [
         {v._rdfClass: "WoTinteractionModel",
         v._subClassOf: "InteractionModel",
-        v._usedBy: ["W3C_WoT_IG"],
+        v._usedBy: ["WoT"],
         v._mayHave: [v._thing, v._event, v._action, v._property, 
                     v._capability, v._index, 
                     v._actuation, v._subscription, v._notification, 
                     v._value, v._params],
-        v._description: """Base class for W3C Thing Model Interactions"""
+        v._description: """Base class for WoT Thing Model Interactions"""
         },
         {v._rdfClass: v._index,
         v._subClassOf: "WoTinteractionModel",
@@ -94,7 +94,7 @@ W3Cschema = {
 }
 
 def serialize():
-    return json.dumps(W3Cschema)
+    return json.dumps(WoTschema, sort_keys=True, indent=4, separators=(',', ': '))
 
 if __name__ == "__main__" :
     print serialize()
