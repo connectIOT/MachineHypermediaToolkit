@@ -1,23 +1,9 @@
 import terms as v
 import json
 
-BaseContext = """
-  {
-        "type": "@type",
-        "id": "@id",
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfa": "http://www.w3.org/ns/rdfa#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "xml": "http://www.w3.org/XML/1998/namespace",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "prov": "http://www.w3.org/ns/prov#",
-        "foaf": "http://xmlns.com/foaf/0.1/",
-        "describedby": "http://www.w3.org/2007/05/powder-s#describedby"
-    }
-"""
 
 BaseSchema = { 
-    v._schema: [
+    v._rdfResource: [
         { v._rdfProperty: v._mayHave,
          v._range : v._rdfClass,
          v._domain: v._rdfClass,
@@ -38,7 +24,7 @@ BaseSchema = {
 
 
 W3Cschema = { 
-    v._context: json.loads(BaseContext),
+    v._context: "http://thingschema.org",
     v._label: "W3Cschema",
     v._rdfResource: [
         {v._rdfClass: "WoTinteractionModel",
