@@ -1,4 +1,5 @@
 import terms as v
+import json
 
 """ terms for the light """
 
@@ -98,7 +99,7 @@ _lt = "lt"
 
 
 light = { 
-    v._context: "http://schema.org",
+    v._context: "http://thingschema.org",
     v._label: "light",
     v._rdfResource: [
         {
@@ -206,21 +207,21 @@ light = {
         {
         v._rdfClass: _move,
         v._rdfType: v._action,
-        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._usedBy: [_brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [_moveRate],
         v._description: """ move action """
         },
         {
         v._rdfClass: _step,
         v._rdfType: v._action,
-        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._usedBy: [_brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [_stepSize, _transitionTime],
         v._description: """ step action """
         },
         {
         v._rdfClass: _stop,
         v._rdfType: v._action,
-        v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
+        v._usedBy: [ _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [],
         v._description: """ stop action """
         },
@@ -247,3 +248,9 @@ light = {
         },
     ]
 }
+
+def serialize():
+    return json.dumps(light)
+
+if __name__ == "__main__" :
+    print serialize()
