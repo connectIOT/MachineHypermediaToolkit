@@ -7,20 +7,24 @@ import json
 
 
 class Schema:
-    def __init__(self, nodeArray=None):
-        self._schema = []
-        if nodeArray:
-            for nodeMap in nodeArray :
-                self.addNode( SchemaNode(nodeMap) ) 
+    def __init__(self, schema=None):
+        self._schema = {}
+        self._nodeArray = []
+        if schema:
+            self._schema = schema
+            self._elementArray = schema[v._rdfResource]
+            if [] != self._elementArray:
+                for nodeMap in self._elementArray :
+                    self.addNode( SchemaNode(nodeMap) ) 
         
     def addNode(self, node):
-        self._schema.append(node)
+        self._nodeArray.append(node)
 
     def serialize(self):
         objectArray = []
-        for node in self._schema:
+        for node in self._nodeArray:
             objectArray.append(node._nodeMap)
-        return json.dumps(objectArray)
+        return json.dumps(objectArray, sort_keys=True, indent=4, separators=(',', ': '))
 
 class SchemaNode:
     def __init__(self, nodeMap):
@@ -37,7 +41,7 @@ class SchemaNode:
         return self
 
     def serialize(self):
-        return json.dumps(self._nodeMap)
+        return json.dumps(self._nodeMap, sort_keys=True, indent=4, separators=(',', ': '))
     
 def selfTest():
     from WoTschema import WoTschema
