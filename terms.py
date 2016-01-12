@@ -134,22 +134,21 @@ hsmlCollectionType = "application/collection+hsml+json"
 hsmlFormsType = "application/forms+hsml+json"
 
 """ Terms for schemas and models """
-_rdfResource = "rdfs:resource"
-_rdfClass = "rdf:Class"
-_rdfProperty = "rdf:Property"
-_subClassOf = "rdfs:subClassOf"
-_range = "rdfs:range"
-_domain = "rdfs:domain"
-_rdfType = "rdf:type"
-_description = "rdfs:comment"
-_comment = "rdfs:comment"
-_label = "rdfs:label"
+_rdfResource = "resource"
+_rdfClass = "class"
+_rdfProperty = "property"
+_subClassOf = "subClassOf"
+_range = "range"
+_domain = "domain"
+_rdfType = "type"
+_description = "comment"
+_comment = "comment"
+_label = "label"
 
 _value = "value"
 
-_ts = "ts"
-_mayHave = "ts:mayHave"
-_usedBy = "ts:usedBy"
+_mayHave = "mayHave"
+_usedBy = "usedBy"
 _schema = "schema"
 _context = "@context"
 
@@ -208,6 +207,25 @@ BaseContext = """
     "schema": "http://schema.org/",
     "describedby": "http://www.w3.org/2007/05/powder-s#describedby",
     "license": "http://www.w3.org/1999/xhtml/vocab#license",
-    "role": "http://www.w3.org/1999/xhtml/vocab#role"
+    "role": "http://www.w3.org/1999/xhtml/vocab#role",
+    "ts": "http://thingschema.org/schema#",
+    "@vocab": "http://thingschema.org/",
+    "type": "rdf:type",
+    "property": "rdf:Property",
+    "class": "rdfs:Class",
+    "comment": "rdfs:comment",
+    "subClassOf": "rdfs:subClassOf",
+    "label": "rdfs:label",
+    "resource": "rdfs:Resource",
+    "range": "rdfs:range",
+    "domain": "rdfs:domain",
+    "mayHave": "ts:mayHave",
+    "usedBy": "ts:usedBy",
+    "decimal" = "xs:decimal",
+    "float" = "xs:float",
+    "integer" = "xs:integer",
+    "string" = "xs:string",
+    "boolean" = "xs:boolean",
+    "dateTime" = "xs:dateTime"
   }
 """
