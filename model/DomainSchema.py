@@ -101,17 +101,17 @@ _lt = "lt"
 light = { 
     v._context: "http://thingschema.org",
     v._label: "light",
-    v._rdfResource: [
+    v._resource: [
         {
-        v._rdfClass: _light,
-        v._rdfType: v._capability,
+        v._class: _light,
+        v._type: v._capability,
         v._usedBy: [v._thing, v._capability],
         v._mayHave: [ _onOff, _brightness, _color],
         v._description: """ base capability for lighting control """
         },
         {
-        v._rdfClass: _onOff,
-        v._rdfType: v._capability,
+        v._class: _onOff,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentState, _targetState, _delayTime, _change, _propertyValueChange],
         v._params: {_targetValue: _targetState,
@@ -119,8 +119,8 @@ light = {
         v._description: """ on/off control """
         },
         {
-        v._rdfClass: _brightness,
-        v._rdfType: v._capability,
+        v._class: _brightness,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentBrightness, _targetBrightness, 
                    _stepBrightness, _moveBrightness,
@@ -133,15 +133,15 @@ light = {
         v._description: """ level control """
         },
         {
-        v._rdfClass: _color,
-        v._rdfType: v._capability,
+        v._class: _color,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._description: """ color control """
         },
         {
-        v._rdfClass: _colorHS,
-        v._rdfType: v._capability,
+        v._class: _colorHS,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentHue, _currentSaturation, _targetHue, _targetSaturation, 
                    _stepHue, _stepSaturation, _moveHue, _moveSaturation,
@@ -154,8 +154,8 @@ light = {
         v._description: """ HS color control """
         },
         {
-        v._rdfClass: _colorXY,
-        v._rdfType: v._capability,
+        v._class: _colorXY,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentX, _currentY, _targetX, _targetY, 
                    _stepX, _stepY, _moveX, _moveY,
@@ -168,8 +168,8 @@ light = {
         v._description: """ XY (CIE) Color control """
         },
         {
-        v._rdfClass: _colorRGB,
-        v._rdfType: v._capability,
+        v._class: _colorRGB,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentRed, _currentGreen, _currentBlue, 
                    _targetRed, _targetGreen, _targetBlue, 
@@ -184,8 +184,8 @@ light = {
         v._description: """ RGB Color Control """
         },
         {
-        v._rdfClass: _colorTemperature,
-        v._rdfType: v._capability,
+        v._class: _colorTemperature,
+        v._type: v._capability,
         v._usedBy: [_light],
         v._mayHave: [_currentTemperature, _targetTemperature, 
                    _transitionTime, _remainingTime,
@@ -198,50 +198,50 @@ light = {
         v._description: """ color Temperature control """
         },
         {
-        v._rdfClass: _change,
-        v._rdfType: v._action,
+        v._class: _change,
+        v._type: v._action,
         v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [_targetValue, _transitionTime],
         v._description: """ change action """
         },
         {
-        v._rdfClass: _move,
-        v._rdfType: v._action,
+        v._class: _move,
+        v._type: v._action,
         v._usedBy: [_brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [_moveRate],
         v._description: """ move action """
         },
         {
-        v._rdfClass: _step,
-        v._rdfType: v._action,
+        v._class: _step,
+        v._type: v._action,
         v._usedBy: [_brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [_stepSize, _transitionTime],
         v._description: """ step action """
         },
         {
-        v._rdfClass: _stop,
-        v._rdfType: v._action,
+        v._class: _stop,
+        v._type: v._action,
         v._usedBy: [ _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._params: [],
         v._description: """ stop action """
         },
         {
-        v._rdfClass: _propertyValueChange,
-        v._rdfType: v._event,
+        v._class: _propertyValueChange,
+        v._type: v._event,
         v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._mayHave: [v._params],
         v._description: """ event for changes in the value of a property """
         },
         {
-        v._rdfClass: _actionInvoked,
-        v._rdfType: v._event,
+        v._class: _actionInvoked,
+        v._type: v._event,
         v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._mayHave: [v._params],
         v._description: """ event for changes in the value of a property """
         },
         {
-        v._rdfClass: _actionCompleted,
-        v._rdfType: v._event,
+        v._class: _actionCompleted,
+        v._type: v._event,
         v._usedBy: [_onOff, _brightness, _colorHS, _colorXY, _colorRGB, _colorTemperature],
         v._mayHave: [v._params],
         v._description: """ event for changes in the value of a property """
