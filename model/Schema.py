@@ -12,7 +12,7 @@ class Schema:
         self._nodeArray = []
         if schema:
             self._schema = schema
-            self._elementArray = schema[v._rdfResource]
+            self._elementArray = schema[v._resource]
             if [] != self._elementArray:
                 for nodeMap in self._elementArray :
                     self.addNode( SchemaNode(nodeMap) ) 
@@ -33,7 +33,7 @@ class SchemaNode:
         
     def configure(self, nodeMap):
         self._nodeMap = nodeMap
-        self._rdfClass = nodeMap[v._rdfClass]
+        self._class = nodeMap[v._class]
         self._subClassOf = nodeMap[v._subClassOf] 
         self._mayHave = nodeMap[v._mayHave]
         self._usedBy = nodeMap[v._usedBy]
