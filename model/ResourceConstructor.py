@@ -16,36 +16,127 @@ classes to resource nodes in the TOM
 
 """
 from ResourceModel import ResourceModel, ResourceNode
+import terms as v
+
+""" these terms should come from the base schema and domain schema """
+_index = "index"
+_capability = "capability"
+_thing = "thing"
+_action = "action"
+_event = "event"
+_property = "property"
+
+_light = "light"
+_onoff = "onoff"
+_brightness = "brightness"
+_colorhs = "colorhs"
+_change = "change"
+_move = "move" 
+_step = "step"
+_stop = "stop"
+
+""" this table is a stub for using the appropriate application schema 
+    to determine the WoT resource type of a particular domain type """
+_domainType = {
+           _light: _thing,
+           _onoff: _capability,
+           _brightness: _capability,
+           _colorhs: _capability,
+           _change: _action,
+           _move: _action,
+           _step: _action,
+           _stop: _action
+           }
+
+""" this list replaces lookup of the domain model property "hasEvent, etc. """
+_collections = [
+                "events",
+                "actions",
+                "properties",
+                "capabilities",
+                ]
+
+_baseResource = {
+                 v._bn: v._null,
+                 v._l:[{v._href: v._null, v._rel:v._self}],
+                 v._e:[]
+                 }
+
 
 class ResourceModelConstructor:
+    def __init__(self, model=None):
+        self._model = model
+        self._resourceModel = ResourceModel()
+        self._processModelNode(model[v._resource], "/")
+        
+    
+    def _processModelNode(self, node, basePath):
+        self._node = node
+        currentBasePath = basePath
+        for self._resource in self._node:
+            self._name = self._resource[v._name]
+            self._type = self._resource[v._type]
+            if _domainType[self._resource[v._type]] in _WoTClass:
+                self._class = _WoTClass[_domainType[self._resource[v._type]]]
+                self._resourceModel.addNodes( self._class(currentBasePath, self._resource).getNode() )
+            for self._property in self._resource:
+                if self._property in _collections:
+                    self._processModelNode(self._resource[self._property], currentBasePath+self._name+"/")
+
+    def serialize(self):
+        return self._resourceModel.serialize()
+        
+class ResourceType:
+    def __init__(self, basePath, resource):
+        self._basePath = basePath
+        self._name = resource[v._name]
+        self._type = resource[v._type] 
+        self._nodeMap = _baseResource 
+        self._nodeMap[v._bn] = self._basePath 
+        self._node = ResourceNode(self._nodeMap)
+        
+    def getNode(self):
+        return self._node
+    
+class Index(ResourceType):
     pass
 
-class ResourceNodeConstructor:
+class Capability(ResourceType):
     pass
 
-class Index:
+class Thing(ResourceType):
     pass
 
-class Capability:
+class Event(ResourceType):
     pass
 
-class Thing:
+class Action(ResourceType):
     pass
 
-class Event:
+class Property(ResourceType):
     pass
 
-class Action:
+class Subscription(ResourceType):
     pass
 
-class Property:
+class Actuation(ResourceType):
     pass
 
-class Subscription:
+class Notification(ResourceType):
     pass
 
-class Actuation:
-    pass
-
-class Notification:
-    pass
+_WoTClass = {
+           _index: Index,
+           _capability: Capability,
+           _thing: Thing,
+           _action: Action,
+           _event: Event,
+           _property: Property
+           }
+           
+def selfTest():
+    from DomainModel import mylight
+    print ResourceModelConstructor(mylight).serialize()
+    
+if __name__ == "__main__" :
+    selfTest()
