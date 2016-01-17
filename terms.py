@@ -144,7 +144,8 @@ _type = "type"
 _description = "comment"
 _comment = "comment"
 _label = "label"
-
+_name = "name"
+_resource = "resource"
 _value = "value"
 
 _mayHave = "mayHave"
