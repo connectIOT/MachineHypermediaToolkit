@@ -78,7 +78,7 @@ class SenmlCollection(Senml):
     def configure(self, items=None, links=None, baseName=None):
         self.__init__(items, links, baseName)
                 
-    def addLinks(self, links):        
+    def addLinks(self, links):      
             self._links.add(links)  
             
     def getLinks(self, selectMap=None):
