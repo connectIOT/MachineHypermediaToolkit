@@ -28,7 +28,8 @@ class SenmlItems(object):
     def updateItemByName(self, itemName, updateItem):
         for item in self._items:
             if item[v._n] == itemName:
-                updateItem[v._n] = itemName
+                if v._n not in updateItem:
+                    updateItem[v._n] = itemName
                 self._items[self._items.index(item)] = updateItem
                 return item
         else:
