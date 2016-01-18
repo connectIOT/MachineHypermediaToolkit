@@ -51,7 +51,15 @@ _domainType = {
            _change: _action,
            _move: _action,
            _step: _action,
-           _stop: _action
+           _stop: _action,
+           "currentState": _property,
+           "targetState": _property,
+           "delayTime": _property,
+           "currentBrightness": _property,
+           "targetBrightness": _property,
+           "moveBrightness": _property,
+           "stepBrightness": _property,
+           "transitionTime": _property
            }
 
 """ this list replaces lookup of the domain model property "hasEvent, etc. """
@@ -75,18 +83,19 @@ class ResourceModelConstructor:
     def _processModelNode(self, node, basePath):
         self._node = node
         currentBasePath = basePath
-        for self._resource in self._node:
-            self._name = self._resource[v._name]
-            self._type = self._resource[v._type]
-            if _domainType[self._resource[v._type]] in _WoTClass:
+        for resource in self._node:
+            self._name = resource[v._name]
+            self._type = resource[v._type]
+            if _domainType[resource[v._type]] in _WoTClass:
                 #print currentBasePath, self._resource[v._name], self._resource[v._type], _domainType[self._resource[v._type]]
-                self._class = _WoTClass[_domainType[self._resource[v._type]]]
-                self._newNode = self._class(currentBasePath, self._resource).getNode()
+                self._class = _WoTClass[_domainType[resource[v._type]]]
+                self._newNode = self._class(currentBasePath, resource).getNode()
                 #print self._newNode.serialize()
                 self._resourceModel.addNodes( self._newNode )
-            for self._property in self._resource:
+            for self._property in resource:
+                print self._property, resource
                 if self._property in _collections:
-                    self._processModelNode(self._resource[self._property], currentBasePath+self._name+ "/")
+                    self._processModelNode(resource[self._property], currentBasePath+self._name+ "/")
 
     def serialize(self):
         return self._resourceModel.serialize()
