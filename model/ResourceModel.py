@@ -30,7 +30,7 @@ class ResourceModel:
         self._result = []
         for node in self._nodeArray :
             self._result.append(node.getModel())
-        return json.dumps(self._result)
+        return json.dumps(self._result, sort_keys=True, indent=2, separators=(',', ': '))
     
     def load(self, jsonString):
         self._loadObject = json.loads(jsonString)
@@ -71,8 +71,12 @@ class ResourceNode:
         self._items = SenmlItems(nodeMap[v._e])
         self._baseName = nodeMap[v._bn]
         self._resource = SenmlCollection(self._links.get(), self._items._items, self._baseName)
-
-
+        
+    def addLinks(self, links):
+        self._resource.addLinks(links)
+        
+    def addItems(self, items):
+        self._resource.addItems(items)
 
     def serialize(self):
         return self._resource.serialize()

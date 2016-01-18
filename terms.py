@@ -80,6 +80,7 @@ _grp ="grp"
 _boundTo = "boundTo"
 _handledBy ="handledBy"
 _item = "item"
+_form = "form"
 _rt = "rt"
 _ct = "ct"
 _if = "if"
@@ -89,6 +90,7 @@ _null = ""
 """ terms in senml or hsml and extensions """
 _e = "e" #entities
 _l = "l" #links
+_f = "f" #forms
 _bn = "bn" #base name (base uri)
 _n = "n" #name (uri)
 _u = "u" #units
