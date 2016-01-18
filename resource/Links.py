@@ -39,6 +39,8 @@ class Links(object) :
                     for attribute in mergeMap:
                         if mergeMap[attribute] == None: 
                             del self._links[self._index][attribute]
+                        elif attribute not in self._links[self._index]:
+                            self._links[self._index][attribute] = mergeMap[attribute]
                         else:
                             # merge attributes between lists and string values
                             if isinstance(self._links[self._index][attribute], list):
