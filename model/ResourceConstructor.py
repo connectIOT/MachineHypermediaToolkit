@@ -30,18 +30,18 @@ class ResourceModelConstructor:
     def _processModelNode(self, node, basePath):
         self._node = node
         currentBasePath = basePath
-        for resource in self._node:
-            self._name = resource[v._name]
-            self._type = resource[v._type]
-            if d._domainType[resource[v._type]] in _WoTClass:
-                #print currentBasePath, self._resource[v._name], self._resource[v._type], d._domainType[self._resource[v._type]]
-                self._class = _WoTClass[d._domainType[resource[v._type]]]
-                self._newNode = self._class(currentBasePath, resource).getNode()
+        for _resource in self._node:
+            _name = _resource[v._name]
+            _type = _resource[v._type]
+            if d._domainType[_resource[v._type]] in _WoTClass:
+                #print currentBasePath, _resource[v._name], _resource[v._type], d._domainType[_resource[v._type]]
+                self._class = _WoTClass[d._domainType[_resource[v._type]]]
+                self._newNode = self._class(currentBasePath, _resource).getNode()
                 #print self._newNode.serialize()
                 self._resourceModel.addNodes( self._newNode )
-            for self._property in resource:
+            for self._property in _resource:
                 if self._property in d._collections:
-                    self._processModelNode(resource[self._property], currentBasePath+self._name+ "/")
+                    self._processModelNode(_resource[self._property], currentBasePath + _name+ "/")
 
     def serialize(self):
         return self._resourceModel.serialize()
