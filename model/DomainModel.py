@@ -10,38 +10,38 @@ light = {
            "capabilities": [
                 {
                     v._type:"onoff", 
-                    v._name:"on", 
+                    v._name:"onOff", 
                     "actions":[
                         {v._name:"change", v._type:"change"}
                     ],
                     "properties": [
-                        {v._name: "cst", v._type: "currentState"},
-                        {v._name: "tst", v._type: "targetState"},
-                        {v._name: "dt", v._type: "delayTime"}
+                        {v._name: "currentState", v._type: "currentstate"},
+                        {v._name: "targetState", v._type: "targetstate"},
+                        {v._name: "delayTime", v._type: "delaytime"}
                     ]
 
                 }, 
                 {
                     v._type:"colorhs", 
-                    v._name:"chs",
+                    v._name:"colorHS",
                     "actions": [
                         {v._name:"change", v._type:"change"}
                     ]
                 }, 
                 {
                     v._type:"brightness", 
-                    v._name:"brt",
+                    v._name:"brightness",
                     "actions": [
                         {v._name:"change", v._type:"change"},
                         {v._name:"move", v._type:"move"}, 
                         {v._name:"step", v._type:"step"}
                     ],
                     "properties": [
-                        {v._name: "cbr", v._type: "currentBrightness"},
-                        {v._name: "tbr", v._type: "targetBrightness"},
-                        {v._name: "mbr", v._type: "moveBrightness"},
-                        {v._name: "sbr", v._type: "stepBrightness"},
-                        {v._name: "tt", v._type: "transitionTime"}
+                        {v._name: "currentBrightness", v._type: "currentbrightness"},
+                        {v._name: "targetBrightness", v._type: "targetbrightness"},
+                        {v._name: "moveBrightness", v._type: "movebrightness"},
+                        {v._name: "stepBrightness", v._type: "stepbrightness"},
+                        {v._name: "transitionTime", v._type: "transitiontime"}
                     ]
                 }
             ]

@@ -32,14 +32,14 @@ _domainType = {
            _move: _action,
            _step: _action,
            _stop: _action,
-           "currentState": _property,
-           "targetState": _property,
-           "delayTime": _property,
-           "currentBrightness": _property,
-           "targetBrightness": _property,
-           "moveBrightness": _property,
-           "stepBrightness": _property,
-           "transitionTime": _property
+           "currentstate": _property,
+           "targetstate": _property,
+           "delaytime": _property,
+           "currentbrightness": _property,
+           "targetbrightness": _property,
+           "movebrightness": _property,
+           "stepbrightness": _property,
+           "transitiontime": _property
            }
 
 """ this list replaces lookup of the domain model property "hasEvent, etc. """
