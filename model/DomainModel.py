@@ -1,11 +1,11 @@
 import json
 import terms as v
 
-mylight = {
+light = {
     v._context : "http://thingschema.org",
-    v._label: "mylight",
+    v._label: "light",
     v. _resource:[
-          {v._name: "mylight", 
+          {v._name: "light", 
            v._type:"light",
            "capabilities": [
                 {v._type:"onoff", v._name:"onoff", 
@@ -28,7 +28,7 @@ mylight = {
 
 
 def selfTest():
-    print json.dumps(mylight, sort_keys=True, indent=2, separators=(',', ': '))
+    print json.dumps(light, sort_keys=True, indent=2, separators=(',', ': '))
     
 if __name__ == "__main__" :
     selfTest()

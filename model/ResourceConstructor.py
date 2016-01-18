@@ -26,7 +26,11 @@ _thing = "thing"
 _action = "action"
 _event = "event"
 _property = "property"
+_actuation = "actuation"
+_subscription = "subscription"
+_notification = "notification"
 
+""" these terms are from the domain schema """
 _light = "light"
 _onoff = "onoff"
 _brightness = "brightness"
@@ -75,10 +79,10 @@ class ResourceModelConstructor:
             self._name = self._resource[v._name]
             self._type = self._resource[v._type]
             if _domainType[self._resource[v._type]] in _WoTClass:
-                print currentBasePath, self._resource[v._name], self._resource[v._type], _domainType[self._resource[v._type]]
+                #print currentBasePath, self._resource[v._name], self._resource[v._type], _domainType[self._resource[v._type]]
                 self._class = _WoTClass[_domainType[self._resource[v._type]]]
                 self._newNode = self._class(currentBasePath, self._resource).getNode()
-                print self._newNode.serialize()
+                #print self._newNode.serialize()
                 self._resourceModel.addNodes( self._newNode )
             for self._property in self._resource:
                 if self._property in _collections:
@@ -102,6 +106,11 @@ class ResourceType:
         self._nodeMap[v._bn] = self._basePath 
         """ Make an empty SenML Collection """
         self._node = ResourceNode(self._nodeMap)
+        self._node.load(json.dumps(self._resourceTemplate))
+        self.getNode()._resource._links.selectMerge( {}, {v._rt: self._type} )
+        """ remove and replace href """
+        self.getNode()._resource._links.selectMerge( {}, {v._href: None} )
+        self.getNode()._resource._links.selectMerge( {}, {v._href: self._name} )
         """ Class-specific override to configure the node """
         self.configure()
         
@@ -116,23 +125,12 @@ class Index(ResourceType):
     _resourceTemplate = {
         v._l:[ {
             v._href: v._null, 
-            v._rel: [v._sub],
-            v._rt: [_index]
+            v._rel: v._sub,
+            v._rt: _index
         } ],
         v._e: []
     }
     
-    def configure(self):
-        self._node.load(json.dumps(self._resourceTemplate))
-        self.getNode()._resource._links.selectMerge( {}, {v._rt: self._type} )
-        """ remove and replace href """
-        self.getNode()._resource._links.selectMerge( {}, {v._href: None} )
-        self.getNode()._resource._links.selectMerge( {}, {v._href: self._name} )
-                            
-        return self.getNode
-
-
-
 class Capability(Index):
     
     _resourceTemplate = {
@@ -161,11 +159,19 @@ class Event(ResourceType):
         v._l:[ {
             v._href: v._null, 
             v._rel: [v._form, v._item],
-            v._rt: [_event]
+            v._rt: _event
         } ],
         v._e: [ {
             v._n: v._null,
-            v._fv: {}
+            v._fv: {
+                v._rel: _event,
+                v._type: _event,
+                v._method: v.post,
+                v._href: _subscription,
+                v._ct: v.senmlCollectionType,
+                v._template: [
+                ]
+            }   
         }]
     }
     
@@ -175,33 +181,72 @@ class Action(ResourceType):
         v._l:[ {
             v._href: v._null, 
             v._rel: [v._form, v._item],
-            v._rt: [_action]
+            v._rt: _action
         } ],
         v._e: [ {
             v._n: v._null,
-            v._fv: {}
+            v._fv: {
+                v._rel: _action,
+                v._type: _action,
+                v._method: v.post,
+                v._href: _actuation,
+                v._ct: v.senmlCollectionType,
+                v._template: [
+                ]
+            }   
         } ]
     }
+    
+    def configure(self):
+        """ configure the form variables """
+        self._form = self._node._resource._items.getItemByName(v._null)
+        self._form[v._n] = self._name
+        self._form[v._fv][v._type] = [self._type, self._form[v._fv][v._type]]
+        self._node._resource._items.updateItemByName(v._null, self._form)
     
 class Property(ResourceType):
     
     _resourceTemplate =  {
         v._l:[ {
             v._href: v._null, 
-            v._rel: [v._sub],
-            v._rt: [_property]
+            v._rel: v._sub,
+            v._rt: _property
         } ],
         v._e: []
     }
     
 class Subscription(ResourceType):
-    pass
+    
+    _resourceTemplate =  {
+        v._l:[ {
+            v._href: v._null, 
+            v._rel: v._sub,
+            v._rt: _subscription
+        } ],
+        v._e: []
+    }
 
 class Actuation(ResourceType):
-    pass
+    
+    _resourceTemplate =  {
+        v._l:[ {
+            v._href: v._null, 
+            v._rel: v._sub,
+            v._rt: _actuation
+        } ],
+        v._e: []
+    }
 
 class Notification(ResourceType):
-    pass
+    
+    _resourceTemplate =  {
+        v._l:[ {
+            v._href: v._null, 
+            v._rel: v._sub,
+            v._rt: _notification
+        } ],
+        v._e: []
+    }
 
 _WoTClass = {
            _index: Index,
@@ -213,8 +258,8 @@ _WoTClass = {
            }
            
 def selfTest():
-    from DomainModel import mylight
-    print ResourceModelConstructor(mylight).serialize()
+    from DomainModel import light
+    print ResourceModelConstructor(light).serialize()
     
 if __name__ == "__main__" :
     selfTest()
