@@ -214,7 +214,13 @@ _WoTClass = {
            
 def selfTest():
     from DomainModel import light
-    print ResourceModelConstructor(light).serialize()
+    resourceModelString = ResourceModelConstructor(light).serialize()
+    #print resourceModelString
+    
+    serverAddress = "http://localhost:8000"
+    
+    print "creating on server: ", ResourceModel().load(resourceModelString).createOnServer(serverAddress).serialize()
+    print "model from server: ", ResourceModel().loadFromServer(serverAddress).serialize()
     
 if __name__ == "__main__" :
     selfTest()

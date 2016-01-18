@@ -100,10 +100,10 @@ class HypermediaHttpRequest(HypermediaRequest):
 
         self._method = self._requestMap[v.method]
         
-        self._url = ""
-        for pathElement in self._requestMap[v.uriPath] :
+        self._url = "/" + "/".join(self._requestMap[v.uriPath][1:])
+        """for pathElement in self._requestMap[v.uriPath] :
             self._url += pathElement
-
+        """
         if 0 < len(self._requestMap[v.uriQuery]) :
             self._queryString = "?"
             for queryElement in self._requestMap[v.uriQuery] :
