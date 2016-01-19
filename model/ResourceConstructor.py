@@ -1,11 +1,12 @@
 """
-ResourceConstructor takes a base schema and model and constructs a Resource Model 
+ResourceConstructor takes a base schema and domain model, and constructs a 
+Resource Model 
 
 The base Schema classes are built by specialized classes in this module, and they 
 are configured from the domain schema and domain model.
 
 The domain schema describes all of the possible constructions and the domain model 
-constrains the construction to the configured resources
+selects the construction of configured resources
 
 The resulting resource model is used as a constructor to the class ResourceModel,
 which can create resources on a server.
@@ -27,6 +28,15 @@ class ResourceModelConstructor:
         self._resourceModel = ResourceModel()
         self._processModelNode(model[v._resource], "/")
         
+    """ a node in the domain model is a "collection" of events, actions, 
+    properties, capabilities, etc.represented as an array of maps that
+    describe name, type, etc. where type conforms to the domain schema
+    
+    This is a recurcive function that performs a depth-first selection.
+    Each resource built produces a collection representation which is 
+    POSTed to the base resource specfied in its "bn" element
+    """    
+    
     def _processModelNode(self, node, basePath):
         self._node = node
         currentBasePath = basePath
@@ -47,7 +57,7 @@ class ResourceModelConstructor:
         return self._resourceModel.serialize()
             
 class ResourceType:
-    
+    """ base class for constructing resource model nodes from domain model elements """
     def __init__(self, basePath, resource):
         self._nodeMap = {
                  v._bn: v._null,
@@ -153,10 +163,13 @@ class Action(ResourceType):
     }
     
     def configure(self):
-        """ configure the form variables """
+        """ configure the form variables , getItemByName returns the entire
+        item including name and value """
         self._form = self._node._resource._items.getItemByName(v._null)
         self._form[v._n] = self._name
         self._form[v._fv][v._type] = [self._type, self._form[v._fv][v._type]]
+        """ if the name is specified in the update map as it is here, 
+        the resource name will be changed """
         self._node._resource._items.updateItemByName(v._null, self._form)
     
 class Property(ResourceType):
