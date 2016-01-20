@@ -2,7 +2,7 @@
 schema for abstract resource models
 """
 
-import terms as v
+import MachineHypermediaToolkit.terms as v
 import json
 
 

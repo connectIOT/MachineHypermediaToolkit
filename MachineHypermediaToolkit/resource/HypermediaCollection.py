@@ -42,7 +42,7 @@ senml element.
 Links that fail to select a resource are returned with a status code of 404 Not Found
 """
 
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 from HypermediaResource import HypermediaResource
 from copy import deepcopy

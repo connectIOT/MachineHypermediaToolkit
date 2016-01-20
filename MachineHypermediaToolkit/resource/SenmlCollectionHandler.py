@@ -1,4 +1,4 @@
-import terms as v
+import MachineHypermediaToolkit.terms as v
 from HypermediaResource import ContentHandler
 from SenmlHandler import Senml
 

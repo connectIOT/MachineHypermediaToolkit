@@ -1,5 +1,5 @@
 import json
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 light = {
     v._context : "http://thingschema.org",

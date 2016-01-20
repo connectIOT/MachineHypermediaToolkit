@@ -9,12 +9,12 @@
     separate the model handling from the serialization and for example 
     an alternate collection+senml+xml format could be easily supported.
 """
-from HypermediaHttpRequest import HypermediaHttpRequest
-from SenmlCollectionHandler import SenmlCollection
-from Links import Links
-from Items import SenmlItems
+from MachineHypermediaToolkit.client.http.HypermediaHttpRequest import HypermediaHttpRequest
+from MachineHypermediaToolkit.resource.SenmlCollectionHandler import SenmlCollection
+from MachineHypermediaToolkit.resource.Links import Links
+from MachineHypermediaToolkit.resource.Items import SenmlItems
 import json
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 class ResourceModel:
     def __init__(self, serverAddress=None, model=None):
