@@ -14,5 +14,14 @@ git clone https://github.com/mjkoster/MachineHypermediaToolkit
 cd MachineHypermedia Toolkit
 
 virtualenv --no-site-packages venv/ 
+
 source venv/bin/activate
+
 python setup.py develop
+
+
+Test using these 2 commands:
+
+python test/StartLocalServer.py
+
+python model/ResourceConstructor.py
