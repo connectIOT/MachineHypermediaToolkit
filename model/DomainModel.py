@@ -9,8 +9,8 @@ light = {
            v._type:"light",
            "capabilities": [
                 {
-                    v._type:"onoff", 
                     v._name:"onOff", 
+                    v._type:"onoff", 
                     "actions":[
                         {v._name:"change", v._type:"change"}
                     ],
@@ -22,15 +22,15 @@ light = {
 
                 }, 
                 {
-                    v._type:"colorhs", 
                     v._name:"colorHS",
+                    v._type:"colorhs", 
                     "actions": [
                         {v._name:"change", v._type:"change"}
                     ]
                 }, 
                 {
-                    v._type:"brightness", 
                     v._name:"brightness",
+                    v._type:"brightness", 
                     "actions": [
                         {v._name:"change", v._type:"change"},
                         {v._name:"move", v._type:"move"}, 
@@ -51,7 +51,7 @@ light = {
 
 
 def selfTest():
-    print json.dumps(light, sort_keys=True, indent=2, separators=(',', ': '))
+    print json.dumps(light, sort_keys=False, indent=2, separators=(',', ': '))
     
 if __name__ == "__main__" :
     selfTest()

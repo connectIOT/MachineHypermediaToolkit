@@ -14,6 +14,7 @@ setup(
     author='Michael J Koster',
     url='',
     license='Apache2',
+    package_dir= {'MachineHypermediaToolkit':'../MachineHypermediaToolkit'},
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,

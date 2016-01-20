@@ -1,7 +1,7 @@
 import terms as v
 
-""" An interaction model is a set of methods applied to a set of node types or resource types 
-    in a TOM.
+""" An interaction model is a set of methods bound to a set of node types or resource types 
+    in a Thing Object Model.
     
     configure() is called after the node is created and the interaction model is attached. This
     could also be a register operation to configure the node as needed besides adding methods
