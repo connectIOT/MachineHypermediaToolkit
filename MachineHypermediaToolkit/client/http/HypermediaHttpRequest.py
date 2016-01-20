@@ -88,9 +88,9 @@ Client processes the response and updates application state
 """
 __version__ = "0.1"
 
-from HypermediaRequest import HypermediaRequest
+from MachineHypermediaToolkit.resource.HypermediaRequest import HypermediaRequest
 from httplib import HTTPConnection
-import terms as v
+import MachineHypermediaToolkit.terms as v
 import time
 import json
 
