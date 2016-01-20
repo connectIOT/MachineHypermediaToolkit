@@ -22,6 +22,6 @@ python setup.py develop
 
 Test using these 2 commands:
 
-python test/StartLocalServer.py
+python MachineHypermediaToolkit/test/StartLocalServer.py
 
-python model/ResourceConstructor.py
+python MachineHypermediaToolkit/model/ResourceConstructor.py
