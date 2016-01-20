@@ -1,4 +1,4 @@
-import terms as v
+import MachineHypermediaToolkit.terms as v
 from Links import Links
 from HypermediaResource import ContentHandler
 

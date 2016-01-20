@@ -1,4 +1,4 @@
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 """ An interaction model is a set of methods bound to a set of node types or resource types 
     in a Thing Object Model.

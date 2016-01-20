@@ -17,7 +17,7 @@ classes to resource nodes in the TOM
 
 """
 from ResourceModel import ResourceModel, ResourceNode
-import terms as v
+import MachineHypermediaToolkit.terms as v
 import DomainTerms as d
 import json
 

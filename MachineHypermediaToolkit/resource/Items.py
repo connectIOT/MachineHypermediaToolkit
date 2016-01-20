@@ -1,4 +1,4 @@
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 class SenmlItems(object):
     def __init__(self, items=None):

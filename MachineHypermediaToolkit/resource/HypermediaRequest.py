@@ -89,7 +89,7 @@ Client processes the response and updates application state
 __version__ = "0.1"
 
 from urllib2 import urlparse
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 class HypermediaRequest():
     

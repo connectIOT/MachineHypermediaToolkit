@@ -1,5 +1,5 @@
-from HypermediaHttpServer import HypermediaHTTPServer, HypermediaHTTPRequestHandler
-from HypermediaCollection import HypermediaCollection
+from MachineHypermediaToolkit.server.http.HypermediaHttpServer import HypermediaHTTPServer, HypermediaHTTPRequestHandler
+from MachineHypermediaToolkit.resource.HypermediaCollection import HypermediaCollection
 import sys
 
 def test(HandlerClass = HypermediaHTTPRequestHandler,

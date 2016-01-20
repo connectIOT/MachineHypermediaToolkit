@@ -1,4 +1,4 @@
-import terms as v
+import MachineHypermediaToolkit.terms as v
 import json
 
 """ terms for the light """

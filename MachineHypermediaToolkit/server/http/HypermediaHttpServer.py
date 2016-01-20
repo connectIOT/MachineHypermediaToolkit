@@ -91,7 +91,7 @@ __version__ = "0.1"
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import socket, sys
 
-import terms as v
+import MachineHypermediaToolkit.terms as v
 
 class HypermediaHTTPServer(HTTPServer):
     pass
