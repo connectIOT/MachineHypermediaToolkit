@@ -7,7 +7,7 @@ https://datatracker.ietf.org/doc/draft-ietf-core-interfaces/
 Following the article at
 http://iot-datamodels.blogspot.com/2015/10/hypermedia-design-for-machine-interfaces.html
 
-# Create a working directory and install the tools with the following:
+### Create a working directory and install the tools with the following:
 
 git clone https://github.com/mjkoster/MachineHypermediaToolkit 
 
