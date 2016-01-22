@@ -5,9 +5,10 @@ light = {
     v._context : "http://thingschema.org",
     v._label: "light",
     v. _resource:[
-          {v._name: "light", 
-           v._type:"light",
-           "capabilities": [
+        {
+            v._name: "light", 
+            v._type:"light",
+            "capabilities": [
                 {
                     v._name:"onOff", 
                     v._type:"onoff", 
@@ -45,7 +46,17 @@ light = {
                     ]
                 }
             ]
-        }      
+        },
+        {
+            v._name: "index",
+            v._type:"index",
+            v._links: [
+                {v._href: "/light"},
+                {v._href: "/light/onOff"},
+                {v._href: "/light/brightness"},
+                {v._href: "/light/colorHS"}
+            ]
+        },                
     ]
 }
 

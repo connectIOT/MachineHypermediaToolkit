@@ -149,6 +149,7 @@ _label = "label"
 _name = "name"
 _resource = "resource"
 _value = "value"
+_links = "links"
 
 _mayHave = "mayHave"
 _usedBy = "usedBy"
