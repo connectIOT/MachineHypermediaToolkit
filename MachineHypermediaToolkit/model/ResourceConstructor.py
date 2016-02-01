@@ -26,7 +26,7 @@ class ResourceModelConstructor:
     def __init__(self, model=None):
         self._model = model
         self._resourceModel = ResourceModel()
-        self._processModelNode(model[v._resource], "/")
+        self._processModelNode(model[v._resource], d._index, "/")
         
     """ a node in the domain model is a "collection" of events, actions, 
     properties, capabilities, etc.represented as an array of maps that
@@ -37,34 +37,36 @@ class ResourceModelConstructor:
     POSTed to the base resource specfied in its "bn" element
     """    
     
-    def _processModelNode(self, node, basePath):
+    def _processModelNode(self, node, baseType, basePath):
         self._node = node
         currentBasePath = basePath
+        currentBaseType = baseType
         for _resource in self._node:
             _name = _resource[v._name]
             _type = _resource[v._type]
             if d._domainType[_resource[v._type]] in _WoTClass:
                 #print currentBasePath, _resource[v._name], _resource[v._type], d._domainType[_resource[v._type]]
                 self._class = _WoTClass[d._domainType[_resource[v._type]]]
-                self._newNode = self._class(currentBasePath, _resource).getNode()
+                self._newNode = self._class(currentBasePath, currentBaseType, _resource).getNode()
                 #print self._newNode.serialize()
                 self._resourceModel.addNodes( self._newNode )
             for self._property in _resource:
                 if self._property in d._collections:
-                    self._processModelNode(_resource[self._property], currentBasePath + _name+ "/")
+                    self._processModelNode(_resource[self._property], _type, currentBasePath + _name+ "/")
 
     def serialize(self):
         return self._resourceModel.serialize()
             
 class ResourceType:
     """ base class for constructing resource model nodes from domain model elements """
-    def __init__(self, basePath, resource):
+    def __init__(self, basePath, baseType, resource):
         self._nodeMap = {
                  v._bn: v._null,
                  v._l:[],
                  v._e:[]
                  }
         self._basePath = basePath
+        self._baseType = baseType
         self._name = resource[v._name]
         self._type = resource[v._type] 
         self._resource = resource
@@ -96,6 +98,12 @@ class Index(ResourceType):
         } ],
         v._e: []
     }
+    """ an index element has a "links" key  should links be a collection type and make a node in the model? 
+    how should the index links get built? """
+    def configure(self):
+        if v._links in self._resource:
+            self._indexLinks = self._resource[v._links]
+            print "index links", self._indexLinks
     
 class Capability(Index):
     
@@ -171,6 +179,10 @@ class Action(ResourceType):
         self._form[v._fv][v._type] = [self._type, self._form[v._fv][v._type]]
         """ if the name is specified in the update map as it is here, 
         the resource name will be changed """
+        for template in d._templates:
+            if self._baseType in template[v._rt] and self._type in template[v._rt]:
+                self._form[v._fv][v._template] = template
+                    
         self._node._resource._items.updateItemByName(v._null, self._form)
         """ TBD look up the template from schema """
     

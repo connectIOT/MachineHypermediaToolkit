@@ -1,5 +1,6 @@
 import json
 import MachineHypermediaToolkit.terms as v
+import DomainTerms as d
 
 light = {
     v._context : "http://thingschema.org",
@@ -27,6 +28,13 @@ light = {
                     v._type:"colorhs", 
                     "actions": [
                         {v._name:"change", v._type:"change"}
+                    ],
+                    "properties": [
+                        {v._name: "currentcolorh", v._type: "currentcolorh"},
+                        {v._name: "currentcolors", v._type: "currentcolors"},
+                        {v._name: "targetcolorh", v._type: "targetcolorh"},
+                        {v._name: "targetcolors", v._type: "targetcolors"},
+                        {v._name: "transitionTime", v._type: "transitiontime"}
                     ]
                 }, 
                 {
@@ -51,10 +59,10 @@ light = {
             v._name: "index",
             v._type:"index",
             v._links: [
-                {v._href: "/light"},
-                {v._href: "/light/onOff"},
-                {v._href: "/light/brightness"},
-                {v._href: "/light/colorHS"}
+                {v._href: "/light/", v._rt: [ d._light, d._thing] },
+                {v._href: "/light/onOff/", v._rt: [ d._onoff, d._capability] },
+                {v._href: "/light/brightness/", v._rt: [ d._brightness, d._capability] },
+                {v._href: "/light/colorHS/", v._rt: [ d._colorhs, d._capability] }
             ]
         },                
     ]
