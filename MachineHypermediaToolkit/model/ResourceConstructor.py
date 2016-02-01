@@ -83,6 +83,9 @@ class ResourceContent:
     def configure(self):
         pass
 
+    def getNode(self):
+        return self._node
+            
 class LinkContent(ResourceContent):
     """ class for adding link content to an index type node """
     _contentTemplate = {
@@ -92,9 +95,6 @@ class LinkContent(ResourceContent):
     def configure(self):
         self._node.addLinks(self._content)
 
-    def getNode(self):
-        return self._node
-            
 class ResourceType:
     """ base class for constructing resource model nodes from domain model elements """
     def __init__(self, basePath, baseType, resource):

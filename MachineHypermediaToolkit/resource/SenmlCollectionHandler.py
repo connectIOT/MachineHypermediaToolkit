@@ -55,6 +55,8 @@ class SenmlCollectionHandler(ContentHandler):
                     self._newResource = self._resource._createSubresource \
                         ( self._link, self._senml._items.getItemByName(self._link[v._href]) )
                     self._location = self._link[v._href]
+                else:
+                    self._resource._linkArray.add(self._link)
                     
             """ return the resource name of the last resource created """   
             if None != self._location :     
