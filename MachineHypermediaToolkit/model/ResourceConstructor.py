@@ -72,6 +72,7 @@ class ResourceType:
         """ Make an empty SenML Collection """
         self._node = ResourceNode(self._nodeMap)
         self._node.load(json.dumps(self._resourceTemplate))
+        """ patch the type attribute link of the resource template """
         self.getNode()._resource._links.selectMerge( {}, {v._rt: self._type} )
         """ remove and replace href """
         self.getNode()._resource._links.selectMerge( {}, {v._href: None} )

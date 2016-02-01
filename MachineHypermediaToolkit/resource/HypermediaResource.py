@@ -14,7 +14,9 @@ class HypermediaResource(object) :
         SenmlValueHandler(self)
 
         self._value = {}
-        self._linkArray = Links({"href":"", "rel":["self"]})
+        
+        """ make a default link pointing to self """
+        self._linkArray = Links({"href":"", "rel":"self"})
         
     def registerContentHandler(self, contentFormat, handler):
         self._contentHandlers[contentFormat] = handler
