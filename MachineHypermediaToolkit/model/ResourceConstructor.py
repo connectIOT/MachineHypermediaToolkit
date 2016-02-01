@@ -172,7 +172,7 @@ class Action(ResourceType):
         """ if the name is specified in the update map as it is here, 
         the resource name will be changed """
         self._node._resource._items.updateItemByName(v._null, self._form)
-        """ TBD look up the template for each application resource type"""
+        """ TBD look up the template from schema """
     
 class Property(ResourceType):
     
@@ -186,8 +186,11 @@ class Property(ResourceType):
     }
 
     def configure(self):
-        """ TBD look up json type and default value for each application resource type """
-        self._node._resource._items.updateItemByName(v._null, {v._n: self._name, v._sv: v._null})
+        """ TBD look up json type and default value from schema """
+        self._dtype = d._propertyType[self._type][d._dtype]
+        self._dval = d._propertyType[self._type][d._dval]
+        self._node._resource._items.updateItemByName \
+            (v._null, {v._n: self._name, self._dtype: self._dval})
 
 class Subscription(ResourceType):
     
