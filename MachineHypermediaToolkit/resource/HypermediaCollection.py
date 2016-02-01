@@ -53,7 +53,7 @@ from SenmlCollectionHandler import SenmlCollectionHandler
 
 class HypermediaCollection(HypermediaResource):
 
-    def __init__(self, rootResource=None, uriPath=["/"], resourceItem=None ):
+    def __init__(self, rootResource=None, uriPath=["/"], resourceLink=None, resourceItem=None ):
         HypermediaResource.__init__(self)
         self._uriPath = uriPath
         self._pathString = "/"
@@ -69,6 +69,11 @@ class HypermediaCollection(HypermediaResource):
         self._itemArray = SenmlItems()
         self._subresources = {}
         
+        """ merge the constructor rt link attribute values into the self link """
+        if None != resourceLink:
+            if v._rt in resourceLink:
+                self._linkArray.selectMerge({v._rel:v._self}, {v._rt: resourceLink[v._rt]})
+            
         """ if there is an item in the constructor, null the resource name and add it to items """
         if None != resourceItem :
             resourceItem[v._n] = v._null
@@ -135,7 +140,8 @@ class HypermediaCollection(HypermediaResource):
         else:
             return None
 
-    def _createSubresource(self, resourceName, resourceItem=None):
+    def _createSubresource(self, resourceLink, resourceItem=None):
+        resourceName = resourceLink[v._href]
         self._subresources[resourceName] = \
-            HypermediaCollection( self._rootResource, self._uriPath + [resourceName], resourceItem) 
+            HypermediaCollection( self._rootResource, self._uriPath + [resourceName], resourceLink, resourceItem) 
         return self._subresources[resourceName]

@@ -78,7 +78,7 @@ class Links(object) :
                     self._selected = False
                     break
                 if isinstance(selectMap[attribute], list) :
-                    """multi value attributes in selectMap"""
+                    """multi value attributes in selectMap, all values must be present to select """
                     for self._attr_val in selectMap[attribute]:
                         if isinstance(self._links[self._linkIndex][attribute], list) :
                             """multi value attribute in link"""
