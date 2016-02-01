@@ -16,6 +16,7 @@ _events = "events"
 _actions = "actions"
 _properties = "properties"
 _capabilities = "capabilities"
+_links = "links"
 
 """ these terms are from the domain schema """
 _light = "light"
@@ -94,6 +95,10 @@ _collections = [
                 _properties,
                 _capabilities
                 ]
+
+_content = [
+            _links
+            ]
 
 _templates = [
     {

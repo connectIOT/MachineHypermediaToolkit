@@ -52,10 +52,48 @@ class ResourceModelConstructor:
                 self._resourceModel.addNodes( self._newNode )
             for self._property in _resource:
                 if self._property in d._collections:
-                    self._processModelNode(_resource[self._property], _type, currentBasePath + _name+ "/")
+                    self._processModelNode(_resource[self._property], _type, currentBasePath + _name + "/")
+                elif self._property in d._content:
+                    self._processContentNode(_resource[self._property], self._property, currentBasePath + _name + "/")
+                    
+    def _processContentNode(self, _content, _type, basePath):
+        self._contentClass = _WoTClass[_type]
+        self._contentNode = self._contentClass(_content, basePath).getNode()
+        self._resourceModel.addNodes( self._contentNode )
+        
 
     def serialize(self):
         return self._resourceModel.serialize()
+            
+class ResourceContent:
+    """ base class for constructing resource model content nodes from domain model elements """
+    def __init__(self, _content, basePath):
+        self._nodeMap = {
+                 v._bn: v._null,
+                 v._l:[],
+                 v._e:[]
+                 }
+        self._basePath = basePath
+        self._content = _content
+        self._nodeMap[v._bn] = self._basePath 
+        self._node = ResourceNode(self._nodeMap)
+        self._node.load(json.dumps(self._contentTemplate))
+        self.configure()
+                
+    def configure(self):
+        pass
+
+class LinkContent(ResourceContent):
+    """ class for adding link content to an index type node """
+    _contentTemplate = {
+        v._l:[],
+        v._e: []
+    }
+    def configure(self):
+        self._node.addLinks(self._content)
+
+    def getNode(self):
+        return self._node
             
 class ResourceType:
     """ base class for constructing resource model nodes from domain model elements """
@@ -237,7 +275,8 @@ _WoTClass = {
            d._thing: Thing,
            d._action: Action,
            d._event: Event,
-           d._property: Property
+           d._property: Property,
+           v._links: LinkContent
            }
            
 def selfTest():
