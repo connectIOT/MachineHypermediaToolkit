@@ -98,12 +98,6 @@ class Index(ResourceType):
         } ],
         v._e: []
     }
-    """ an index element has a "links" key  should links be a collection type and make a node in the model? 
-    how should the index links get built? """
-    def configure(self):
-        if v._links in self._resource:
-            self._indexLinks = self._resource[v._links]
-            print "index links", self._indexLinks
     
 class Capability(Index):
     
@@ -181,7 +175,7 @@ class Action(ResourceType):
         the resource name will be changed """
         for template in d._templates:
             if self._baseType in template[v._rt] and self._type in template[v._rt]:
-                self._form[v._fv][v._template] = template
+                self._form[v._fv][v._template] = template[v._template]
                     
         self._node._resource._items.updateItemByName(v._null, self._form)
         """ TBD look up the template from schema """
@@ -203,7 +197,7 @@ class Property(ResourceType):
         self._dval = d._propertyType[self._type][d._dval]
         self._node._resource._items.updateItemByName \
             (v._null, {v._n: self._name, self._dtype: self._dval})
-
+    
 class Subscription(ResourceType):
     
     _resourceTemplate =  {
