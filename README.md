@@ -9,7 +9,7 @@ http://iot-datamodels.blogspot.com/2015/10/hypermedia-design-for-machine-interfa
 
 ### Create a working directory and install the tools with the following:
 
-git clone https://github.com/mjkoster/MachineHypermediaToolkit 
+git clone https://github.com/connectIOT/MachineHypermediaToolkit 
 
 cd MachineHypermedia Toolkit
 
@@ -28,5 +28,11 @@ python setup.py develop
 ### Test using these 2 commands. Start a local instance of the server, then run the Resource Constructor self-test, which creates and inspects a set of resources on the server:
 
 python MachineHypermediaToolkit/test/StartLocalServer.py
+
+or to run the server in the background:
+
+nohup python MachineHypermediaToolkit/test/StartLocalServer.py &
+
+this test client creates a set of resources, reads them back. and exits:
 
 python MachineHypermediaToolkit/model/ResourceConstructor.py
