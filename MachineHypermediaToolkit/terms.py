@@ -150,9 +150,11 @@ _name = "name"
 _resource = "resource"
 _value = "value"
 _links = "links"
+_base = "base"
 
 _mayHave = "mayHave"
 _usedBy = "usedBy"
+_has = "has"
 _schema = "schema"
 _context = "@context"
 

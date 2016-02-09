@@ -112,7 +112,7 @@ class Senml():
             self._items.add(items)
         
     def serialize(self):
-        return json.dumps(self._senml)
+        return json.dumps(self._senml, sort_keys=False, indent=2, separators=(',', ': '))
     
     def load(self, jsonString):
         self._loadObject = json.loads(jsonString)

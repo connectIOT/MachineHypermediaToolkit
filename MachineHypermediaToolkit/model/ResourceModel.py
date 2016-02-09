@@ -38,7 +38,7 @@ class ResourceModel:
             for nodeMap in self._loadObject:
                 self.addNodes(ResourceNode(nodeMap))
         elif isinstance(self._loadObject, dict):
-            self.addNodes(ResourceNode(nodeMap))
+            self.addNodes(ResourceNode(self._loadObject))
         return self
             
     def createOnServer(self, serverAddress=None):
