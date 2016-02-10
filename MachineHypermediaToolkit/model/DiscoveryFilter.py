@@ -22,10 +22,6 @@ _filter = [
                     {
                         v._rt: d._transitiontime,
                         v._label: d._transitiontime
-                    },
-                    {
-                        v._rt: d._change,
-                        v._label: d._change
                     }
                 ]
             },
@@ -52,10 +48,6 @@ _filter = [
                     {
                         v._rt: d._transitiontime,
                         v._label: d._transitiontime
-                    },
-                    {
-                        v._rt: d._change,
-                        v._label: d._change
                     }
                 ]
              },
@@ -74,10 +66,6 @@ _filter = [
                     {
                         v._rt: d._delaytime,
                         v._label: d._delaytime
-                    },
-                    {
-                        v._rt: d._change,
-                        v._label: d._change
                     }
                 ]
             }
