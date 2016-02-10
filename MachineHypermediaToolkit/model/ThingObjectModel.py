@@ -29,6 +29,7 @@ class TOMgraph(ResourceModel):
         self._baseURL = baseURL
         self._filter = _filter
         self._anchorURI = self._scheme + "://" + self._netloc
+        self._index = {}
         """ make anchor node """
         self._anchorTemplate = {
             v._bn: self._anchorURI,
@@ -87,7 +88,15 @@ class TOMgraph(ResourceModel):
                 for link in nextNode._links.get({v._rt: item[v._rt] }):
                     linkpath = nextNode._baseName + link[v._href] # non-index nodes have path relative to bn
                     # add selected nodes one at a time with the TOM function wrapper
-                    self.addNodes(TOMnode(self._server._getResource(linkpath) ))
+                    newNode = TOMnode(self._server._getResource(linkpath) )
+                    self.addNodes(newNode)
+                    if v._label in item:
+                        if item[v._label] not in self._index:
+                            self._index[item[v._label]] = newNode
+                        elif isinstance(self._index[item[v._label]], list):
+                            self._index[item[v._label]].append(newNode)
+                        else:
+                            self._index[item[v._label]] = [self._index[item[v._label]], newNode]
                     # drive state machine forward, recursively discover using the next filter rank
                     if v._has in item:
                         self._discover(linkpath, item[v._has])
@@ -125,6 +134,8 @@ def selfTest():
     model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter)
     print
     print model.serialize()
+    for graph in model._TOMgraphs:
+        print graph._index
         
 if __name__ == "__main__" :
     selfTest()
