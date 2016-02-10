@@ -21,6 +21,11 @@ class ThingObjectModel(object):
     def serialize(self):
         for graph in self._TOMgraphs:
             return graph.serialize()
+        
+    def byLabel(self, label):
+        for _graph in self._TOMgraphs:
+            if label in _graph._index:
+                return(_graph._index[label])
     
 class TOMgraph(ResourceModel):
     
@@ -133,9 +138,12 @@ def selfTest():
     from DiscoveryFilter import _filter
     model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter)
     print
-    print model.serialize()
-    for graph in model._TOMgraphs:
-        print graph._index
-        
+    #print model.serialize()
+    print model.byLabel("mylight").serialize()
+    print model.byLabel("current-level").get()
+    model.byLabel("current-level").set(50)
+    print model.byLabel("current-level").get()
+    
+    
 if __name__ == "__main__" :
     selfTest()
