@@ -13,18 +13,30 @@ class SenmlCollectionHandler(ContentHandler):
         
         if v.get == request[v.method]:
             """ return a representation of a collection+senml instance with links and items
-                first process the query and load the list of matching links into the senml 
-                object; if the query is empty, all links are returned """
-            self._senml.configure( self._resource._linkArray.get(request[v.uriQuery]), baseName=self._resource._pathString )
-            if [] == self._senml.getLinks() :
-                request[v.response][v.status] = v.NotFound
-                return
-            """ clear the query parameters as they are consumed """
-            request[v.uriQuery] = {}
-            """ get items in local context and add to the result """
-            for self._link in self._senml._links.get({v._rel:v._item}) :
-                self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )
-            
+                first check to see if the reference is to a local item in the collection and
+                process. if not, process the query and load the list of matching links into 
+                the senml object; if the query is empty, all links are returned """
+                
+            if 1 == self._resource._unrouted :    
+                self._senml.configure( self._resource._linkArray.get \
+                                       ({v._href:self._resource._resourceName}), baseName=self._resource._pathString )
+                item = self._resource._itemArray.getItemByName(self._resource._resourceName)
+                if None != item:
+                    self._senml.addItems(item)
+                else:
+                    request[v.response][v.status] = v.NotFound
+                    return                                     
+            else:    
+                self._senml.configure( self._resource._linkArray.get(request[v.uriQuery]), baseName=self._resource._pathString )
+                if [] == self._senml.getLinks() :
+                    request[v.response][v.status] = v.NotFound
+                    return
+                """ clear the query parameters as they are consumed """
+                request[v.uriQuery] = {}
+                """ get items in local context and add to the result """
+                for self._link in self._senml._links.get({v._rel:v._item}) :
+                    self._senml.addItems( self._resource._itemArray.getItemByName(self._link[v._href]) )   
+                             
             request[v.response][v.payload] = self._senml.serialize()
             request[v.response][v.status] = v.Success
             
