@@ -22,6 +22,10 @@ _filter = [
                     {
                         v._rt: d._transitiontime,
                         v._label: "brightness-ramp"
+                    },
+                    {
+                        v._rt: d._change,
+                        v._label: "brightness-change"
                     }
                 ]
             },
@@ -48,6 +52,10 @@ _filter = [
                     {
                         v._rt: d._transitiontime,
                         v._label: "color-ramp"
+                    },
+                    {
+                        v._rt: d._change,
+                        v._label: "colorhs-change"
                     }
                 ]
              },
@@ -66,6 +74,10 @@ _filter = [
                     {
                         v._rt: d._delaytime,
                         v._label: "onoff-delay"
+                    },
+                    {
+                        v._rt: d._change,
+                        v._label: "onoff-change"
                     }
                 ]
             }

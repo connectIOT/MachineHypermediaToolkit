@@ -66,8 +66,11 @@ class ResourceModel:
     
 class ResourceNode:
     def __init__(self, nodeMap):
-        
-        self._links = Links(nodeMap[v._l])
+        """ Make a Resource Node from either a collection or a plain senml """
+        if v._l in nodeMap:
+            self._links = Links(nodeMap[v._l])
+        else:
+            self._links = Links()          
         self._items = SenmlItems(nodeMap[v._e])
         self._baseName = nodeMap[v._bn]
         self._resource = SenmlCollection(self._links.get(), self._items._items, self._baseName)

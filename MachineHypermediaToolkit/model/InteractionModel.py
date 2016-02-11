@@ -17,7 +17,6 @@ import MachineHypermediaToolkit.terms as v
     Capabilities are derived classes of Index, and contain Events, Actions, and Properties.
     Indices can be created to point to other resources, for example to create an actuation
     group (GroupIndex) or simply to aid discovery and configuration.
-    
 """
 
 class InteractionModel:

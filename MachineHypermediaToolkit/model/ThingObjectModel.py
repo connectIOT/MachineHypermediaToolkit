@@ -90,7 +90,6 @@ class TOMgraph(ResourceModel):
         self._discover(startpath, _filter)
         
     def _discover(self, nextpath, _filter):
-                
         if self._verbose:
             print ">",
         nextNode = self._server._getResource(nextpath)
@@ -101,6 +100,7 @@ class TOMgraph(ResourceModel):
             self.addNodes(TOMnode(nextNode))
             if self._verbose:
                 print ".",
+                #print "node:", nextpath
             """ recursively discover sub index nodes using the current filter rank """
             for link in nextNode._links.get():
                 if v._null != link[v._href]:
@@ -117,6 +117,7 @@ class TOMgraph(ResourceModel):
                     self.addNodes(newNode)
                     if self._verbose:
                         print ".",
+                        #print "node:", linkpath
                     """ if there is a label in the filter node, make an entry in the index. If the label
                     is already in the index, add another instance, convert to an array if necessary """
                     if v._label in item:
@@ -162,7 +163,8 @@ class TOMnode(ResourceNode):
 def selfTest():
     from DiscoveryFilter import _filter
     print "discovering",
-    model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
+    #model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
+    model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
     print "completed"
     #print model.serialize()
     #print model.byLabel("mylight").serialize()
