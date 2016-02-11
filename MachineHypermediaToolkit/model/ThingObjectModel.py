@@ -91,7 +91,7 @@ class TOMgraph(ResourceModel):
         
     def _discover(self, nextpath, _filter):
         if self._verbose:
-            print ">",
+            print "discover:", nextpath
         nextNode = self._server._getResource(nextpath)
         """ returns an instance of ResourceNode
         see if it is an index node  """
@@ -99,8 +99,7 @@ class TOMgraph(ResourceModel):
             """ add the index node to the graph """
             self.addNodes(TOMnode(nextNode))
             if self._verbose:
-                print ".",
-                #print "node:", nextpath
+                print "node:", nextpath
             """ recursively discover sub index nodes using the current filter rank """
             for link in nextNode._links.get():
                 if v._null != link[v._href]:
@@ -116,8 +115,7 @@ class TOMgraph(ResourceModel):
                     newNode = TOMnode(self._server._getResource(linkpath) )
                     self.addNodes(newNode)
                     if self._verbose:
-                        print ".",
-                        #print "node:", linkpath
+                        print "node:", linkpath
                     """ if there is a label in the filter node, make an entry in the index. If the label
                     is already in the index, add another instance, convert to an array if necessary """
                     if v._label in item:
@@ -162,12 +160,18 @@ class TOMnode(ResourceNode):
 
 def selfTest():
     from DiscoveryFilter import _filter
-    print "discovering",
+    print "discovering"
     #model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
     model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
     print "completed"
+    
     #print model.serialize()
     #print model.byLabel("mylight").serialize()
+    
+    """ current-level is type Property so will have get and set methods bound to it.
+        Currently only values in the model are used. 
+        The next version TOM will enable get/set server resource"""
+        
     print "starting level:", model.byLabel("current-level").get()
     model.byLabel("current-level").set(50)
     print "new level:", model.byLabel("current-level").get()
