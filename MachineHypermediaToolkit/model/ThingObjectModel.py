@@ -161,8 +161,8 @@ class TOMnode(ResourceNode):
 def selfTest():
     from DiscoveryFilter import _filter
     print "discovering"
-    #model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
-    model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
+    model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
+    #model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
     print "completed"
     
     #print model.serialize()
