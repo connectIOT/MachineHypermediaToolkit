@@ -97,7 +97,7 @@ class TOMgraph(ResourceModel):
         see if it is an index node  """
         if [] != nextNode._links.get({v._rel: v._self, v._rt: v._index}):
             """ add the index node to the graph """
-            self.addNodes(TOMnode(nextNode))
+            self.addNodes(TOMnode(nextNode, self._server))
             if self._verbose:
                 print "node:", nextpath
             """ recursively discover sub index nodes using the current filter rank """
@@ -112,7 +112,7 @@ class TOMgraph(ResourceModel):
                 for link in nextNode._links.get({v._rt: item[v._rt] }):
                     linkpath = nextNode._baseName + link[v._href] # non-index nodes have path relative to bn
                     """ add selected nodes one at a time with the TOM function wrapper """
-                    newNode = TOMnode(self._server._getResource(linkpath) )
+                    newNode = TOMnode(self._server._getResource(linkpath), self._server )
                     self.addNodes(newNode)
                     if self._verbose:
                         print "node:", linkpath
@@ -146,9 +146,11 @@ class TOMgraph(ResourceModel):
         
 class TOMnode(ResourceNode):
     """ Build TOMnode from a ResourceNode instance to add a function wrapper for type-specific API methods """
-    def __init__(self, node):
+    def __init__(self, node, server):
         """ getModel returns the representation of the resource in collection+senml internal format """
         ResourceNode.__init__(self, node.getModel())
+        """ TOMnodes use the TOMgraph server instance to interact with remote resources """
+        self._server = server
                 
         """ if there is a resource type matching one of the WoT Model classes or supporting classes, make 
             an instance of the support class which will bind class-specific API methods and properties to the node
@@ -162,20 +164,23 @@ def selfTest():
     from DiscoveryFilter import _filter
     print "discovering"
     model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
-    #model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
+    # model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
     print "completed"
     
     #print model.serialize()
     #print model.byLabel("mylight").serialize()
     
     """ current-level is type Property so will have get and set methods bound to it.
-        Currently only values in the model are used. 
-        The next version TOM will enable get/set server resource"""
+        server request is sent and model value is updated. Value is returned on get.
+        Get the current value, update with an incremented value, and read back """
         
-    print "starting level:", model.byLabel("current-level").get()
-    model.byLabel("current-level").set(50)
+    startingLevel = model.byLabel("current-level").get()
+    print "starting level:", startingLevel
+    newLevel = startingLevel + 10
+    if newLevel > 100:
+        newLevel = 0
+    model.byLabel("current-level").set(newLevel)
     print "new level:", model.byLabel("current-level").get()
-    
     
 if __name__ == "__main__" :
     selfTest()
