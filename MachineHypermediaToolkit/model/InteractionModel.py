@@ -52,12 +52,18 @@ class Property(InteractionModel):
     def configure(self):
         self._node.get = self.get
         self._node.set = self.set
+        self._server = self._node._server
+        self._baseName = self._node._baseName
 
     def get(self):
+        self._propertyValue = self._server.getItem(self._baseName)
+        self._node._items.updateValueByName("", self._propertyValue)
         return self._node._items.getValueByName("")
         
     def set(self, newValue):
-        self._node._items.updateValueByName("", newValue)
+        self._propertyValue = newValue
+        self._server.putItem(self._baseName, self._propertyValue)
+        self._node._items.updateValueByName("", self._propertyValue)
         
 class Actuation(InteractionModel):
     pass

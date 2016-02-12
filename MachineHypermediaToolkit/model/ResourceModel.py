@@ -127,6 +127,24 @@ class Server:
         #print "payload: ", self._request._requestMap[v.response][v.payload]
         return ResourceNode( json.loads(self._request._requestMap[v.response][v.payload] ) )
 
+    def getItem(self, uriPath="/"):
+        self._url = self._server + uriPath
+        self._request = HypermediaHttpRequest(self._url, \
+                {v.method:v.get, v.contentFormat:v.plainTextType })
+        self._request.send()
+        self._request.getResponse()
+        #print "payload: ", self._request._requestMap[v.response][v.payload]
+        return json.loads(self._request._requestMap[v.response][v.payload] ) 
+
+    def putItem(self, uriPath="/", newItem = None):
+        self._url = self._server + uriPath
+        self._request = HypermediaHttpRequest(self._url, \
+                {v.method:v.put, v.contentFormat:v.plainTextType, v.payload:json.dumps(newItem) })
+        self._request.send()
+        self._request.getResponse()
+        #print "payload: ", self._request._requestMap[v.response][v.payload]
+        return 
+
 
 def selfTest():
     jsonString = """
