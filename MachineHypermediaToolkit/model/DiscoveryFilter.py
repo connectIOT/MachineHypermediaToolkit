@@ -85,6 +85,27 @@ _filter = [
     }
 ]
 
+"""
+_filter = [
+    {
+        v._rt: d._light,
+        v._label: "mylight",
+        v._has: [
+                 {
+                  v._rt: d._brightness,
+                  v._label: "dimmer-control",
+                  v._has:[
+                    {
+                        v._rt: d._currentbrightness,
+                        v._label: "current-level"
+                    }
+                ]
+            }
+        ]
+    }
+]
+"""
+
 def filterString():
     return json.dumps(_filter)
     
