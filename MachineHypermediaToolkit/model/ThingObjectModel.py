@@ -33,7 +33,8 @@ import InteractionModel as im
 class ThingObjectModel(object):
     def __init__(self, baseURL=None, _filter=[], verbose=False):
         self._TOMgraphs = []
-        self._TOMgraphs.append(TOMgraph(baseURL, _filter, verbose))
+        if None != baseURL:
+            self.addGraph(baseURL, _filter, verbose)
         
     def serialize(self):
         for graph in self._TOMgraphs:
@@ -43,14 +44,18 @@ class ThingObjectModel(object):
         for _graph in self._TOMgraphs:
             if label in _graph._index:
                 return(_graph._index[label])
-    
+            
+    def addGraph(self, baseURL, _filter=[], verbose=False):
+        newGraph = TOMgraph(baseURL, _filter, verbose)
+        self._TOMgraphs.append(newGraph)
+        return newGraph
+
 class TOMgraph(ResourceModel):
     
-    def __init__(self, baseURL=None, _filter=[], verbose=False):
+    def __init__(self, baseURL="http://localhost:8000/", _filter=[], verbose=False):
         (self._scheme, self._netloc, self._path, _params, _query, _fragment ) = urlparse(baseURL) 
         self._baseURL = baseURL
         self._filter = _filter
-        self._verbose = verbose
         self._anchorURI = self._scheme + "://" + self._netloc
         self._index = {}
         """ make anchor node """
@@ -70,11 +75,11 @@ class TOMgraph(ResourceModel):
             ]
         }
         ResourceModel.__init__(self, self._anchorURI, json.dumps(self._anchorTemplate))
+        self._baseNodeList = self.getNodes({v._rel:v._base})
         if [] != self._filter:
-            self._baseNodeList = self.getNodes({v._rel:v._base})
-            self.discover(self._baseNodeList[0], _filter)
+            self.discover( _filter, verbose)
 
-    def discover(self, baseNode, _filter, verbose=False):
+    def discover(self, _filter, verbose=False, baseNode=None):
         
         """ invoked from a base node, recursively interprets a discovery
         filter and processes linked network resources until all potential 
@@ -85,7 +90,10 @@ class TOMgraph(ResourceModel):
         The "server" instance is configured with the anchor URI and 
         takes relative references. The structure of the filter is a 
         recursive array of maps and is interpreted depth first."""
-        
+
+        self._verbose = verbose
+        if None == baseNode:
+            baseNode = self._baseNodeList[0]
         startpath = baseNode._links.get({v._rel: v._base})[0][v._href]
         self._discover(startpath, _filter)
         
@@ -128,13 +136,7 @@ class TOMgraph(ResourceModel):
                     """ drive state machine forward, recursively discover using the next filter rank"""
                     if v._has in item:
                         self._discover(linkpath, item[v._has])
-                                        
-    def lookup(self):
-        """ invoked from a starting node, interprets a discovery
-        filter and processes linked TOM nodes until all 
-        potential routes are exhausted"""
-        pass        
-        
+                                               
     def getNodes(self, selectMap):
         """ returns a list of nodes that have matching link attribute values """
         resultSet = []
@@ -162,13 +164,11 @@ class TOMnode(ResourceNode):
 
 def selfTest():
     from DiscoveryFilter import _filter
-    print "discovering"
-    model = ThingObjectModel("http://162.243.62.216:8000/index/", _filter, verbose=True)
-    # model = ThingObjectModel("http://localhost:8000/index/", _filter, verbose=True)
-    print "completed"
     
-    #print model.serialize()
-    #print model.byLabel("mylight").serialize()
+    model = ThingObjectModel()
+    print "discovering"
+    model.addGraph( "http://162.243.62.216:8000/index/" ).discover( _filter, verbose=True )
+    print "completed"
     
     """ current-level is type Property so will have get and set methods bound to it.
         server request is sent and model value is updated. Value is returned on get.
